@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 'use server'
 
-const saveCards = async (card: any) => {
-  const { id, question, answer } = card
-  console.log(id, question, answer)
+const saveCards = async (title: string, cards: Map<string, string>) => {
+  // console.log(cards)
+  cards.forEach((value, key) => {
+    console.log(title)
+    console.log(key)
+    console.log(value)
+  })
 }
 
 export default saveCards
