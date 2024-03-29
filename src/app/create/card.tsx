@@ -9,7 +9,7 @@ interface CardProps {
 // create delete icon...
 const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   return (
-    <div className='m-3 p-5 bg-slate-400'>
+    <div className='m-3 p-5 bg-slate-400 rounded-xl'>
       <div className='flex gap-6 mb-3'>
         <textarea
           id={ `${id}-question` }
