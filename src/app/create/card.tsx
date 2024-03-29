@@ -1,13 +1,16 @@
 import React from 'react'
+import { FiTrash } from 'react-icons/fi'
 
 interface CardProps {
   id: string
+  removeCard: (id: string) => void
 }
 
-const Card: React.FC<CardProps> = ({ id }) => {
+// create delete icon...
+const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   return (
-    <div className='m-3'>
-      <div className='flex gap-6'>
+    <div className='m-3 p-5 bg-slate-400 rounded-xl'>
+      <div className='flex gap-6 mb-3'>
         <textarea
           id={ `${id}-question` }
           placeholder="Question"
@@ -19,6 +22,7 @@ const Card: React.FC<CardProps> = ({ id }) => {
           className= 'flex-auto block rounded-lg py-2 px-3 border border-gray-300 bg-gray-50'
         />
       </div>
+      <FiTrash size={30} color='white' className='cursor-pointer' onClick={() => { removeCard(id) }}/>
     </div>
   )
 }

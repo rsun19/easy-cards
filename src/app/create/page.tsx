@@ -3,15 +3,26 @@ import React, { useState } from 'react'
 import Navbar from '../navbar'
 // import saveCards from './save-cards'
 import Card from './card'
+import saveCards from './save-cards'
 
 const Create = (): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
-  const [cards, setCards] = useState([<Card key='0' id='0' />])
+  const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
 
   function addCards (): void {
     const newCardNum = cardNum
     setCardNum(cardNum + 1)
-    setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} />])
+    setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} removeCard={removeCard}/>])
+  }
+
+  function removeCard (id: string): void {
+    const newCardsList = cards
+    for (let i = 0; i < cards.length; ++i) {
+      if (cards[i].props.id === id) {
+        newCardsList.splice(i, 1)
+      }
+    }
+    setCards(newCardsList)
   }
 
   return (
@@ -31,19 +42,22 @@ const Create = (): React.JSX.Element => {
         ))}
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-teal-700 rounded-xl cursor-pointer' onClick={() => { addCards() }}>
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => { addCards() }}>
           Add a card
         </div>
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-teal-700 rounded-xl cursor-pointer' onClick={() => {
-          const cardMapping = new Map()
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => {
+          const setName = document.getElementById('setName') as HTMLInputElement
+          const cardMapping = new Map<string, string>()
           cards.forEach((card) => {
             const id = card.props.id
             const questionElement = document.getElementById(`${id}-question`) as HTMLInputElement
             const answerElement = document.getElementById(`${id}-answer`) as HTMLInputElement
-            cardMapping.set(id, [questionElement, answerElement])
+            cardMapping.set(questionElement.value, answerElement.value)
           })
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          saveCards(setName.value, cardMapping)
         }}>
           Submit
         </div>
