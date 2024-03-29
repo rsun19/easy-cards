@@ -2,8 +2,10 @@ import React from 'react'
 
 interface CardProps {
   id: string
+  removeCard: (id: string) => void
 }
 
+// create delete icon...
 const Card: React.FC<CardProps> = ({ id }) => {
   return (
     <div className='m-3'>

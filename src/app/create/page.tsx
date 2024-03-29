@@ -6,12 +6,22 @@ import Card from './card'
 
 const Create = (): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
-  const [cards, setCards] = useState([<Card key='0' id='0' />])
+  const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
 
   function addCards (): void {
     const newCardNum = cardNum
     setCardNum(cardNum + 1)
-    setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} />])
+    setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} removeCard={removeCard}/>])
+  }
+
+  function removeCard (id: string): void {
+    const newCardsList = cards
+    for (let i = 0; i < cards.length; ++i) {
+      if (cards[i].props.id === id) {
+        newCardsList.splice(i, 1)
+      }
+    }
+    setCards(newCardsList)
   }
 
   return (
