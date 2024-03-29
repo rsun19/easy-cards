@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import Navbar from '../navbar'
 // import saveCards from './save-cards'
-import './create.css'
 import Card from './card'
 
 const Create = (): React.JSX.Element => {

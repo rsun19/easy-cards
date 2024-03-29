@@ -12,9 +12,9 @@ export default function Home (): React.JSX.Element {
         <div className='text-xl'>
           Edit in real time, or make flashcards using generative AI tools!
         </div>
-        <div className='text-xl cursor-pointer bg-cyan-500 rounded-xl px-5 py-3 z-3'>
+        <a href='/create' className='text-xl cursor-pointer bg-cyan-500 rounded-xl px-5 py-3 z-3'>
           Create a new set today!
-        </div>
+        </a>
       </div>
     </>
   )
