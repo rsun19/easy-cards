@@ -1,6 +1,15 @@
 import React from 'react'
 
-const Navbar = (): React.JSX.Element => {
+interface NavbarProps {
+  isLoggedIn: boolean
+  id: string | null
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, id }): React.JSX.Element => {
+  let url = '/login'
+  if (id !== null) {
+    url = `account/${id}`
+  }
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -17,7 +26,8 @@ const Navbar = (): React.JSX.Element => {
             </a>
             </div>
             <div>
-            <a href="/login" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Log in</a>
+            { !isLoggedIn && <a href="/login" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Log in</a> }
+            { isLoggedIn && <a href={url} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Log in</a> }
             </div>
         </div>
     </nav>

@@ -6,7 +6,10 @@ interface CardProps {
   removeCard: (id: string) => void
 }
 
-// create delete icon...
+/*
+https://www.npmjs.com/package/react-latex-next
+https://www.npmjs.com/package/react-code-blocks
+*/
 const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   return (
     <div className='m-3 p-5 bg-slate-400 rounded-xl'>
