@@ -1,4 +1,4 @@
-import Navbar from './navbar'
+import Navbar from './components/navbar'
 import React from 'react'
 
 export default function Home (): React.JSX.Element {

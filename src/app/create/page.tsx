@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import Navbar from '../navbar'
+import Navbar from '../components/navbar'
 // import saveCards from './save-cards'
 import Card from './card'
 import saveCards from './save-cards'
