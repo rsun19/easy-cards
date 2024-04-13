@@ -1,35 +1,45 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from './app/lib/auth'
-import { type SessionProps } from './app/lib/sessionprops'
-import axios from 'axios'
+import { auth } from './auth'
 import { cookies } from 'next/headers'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export async function middleware (request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/api/token/request')) {
-    const session: SessionProps | null = await getServerSession(authOptions)
+    const session = await auth()
     if (session?.user?.email != null) {
       try {
-        await axios.post('http://localhost:9000/auth/token/request', {
-          email: session.user.email
+        const response = await fetch('http://localhost:9000/auth/token/request', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: session.user.email
+          })
         })
-          .then(function (response) {
-            console.log(response)
-            cookies().set('session', response.data as string, {
-              httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
-              maxAge: 60 * 60 * 24 * 7 * 4, // One month
-              path: '/'
-            })
-            return NextResponse.redirect(new URL('/', request.url))
+        if (response.ok) {
+          const textResponse = await response.text()
+          console.log(textResponse)
+          /*
+          "hacky solution", using redirect...
+          https://github.com/vercel/next.js/issues/49442
+          */
+          const responseUrl = NextResponse.redirect(request.url)
+          responseUrl.cookies.set('session', textResponse, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 24 * 7 * 4, // One month
+            path: '/'
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          return NextResponse.redirect(new URL('/', request.url))
+        } else {
+          console.log('failure')
+          console.log(response)
+        }
       } catch (e) {
-        return NextResponse.redirect(new URL('/login', request.url))
+        console.log(e)
+        // return NextResponse.redirect(new URL('/login', request.url))
       }
     }
   }
