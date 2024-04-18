@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-const useWindowWidth = (): { lg: boolean } => {
-  const [lg, setLg] = useState(window.innerWidth >= 1024)
+const useWindowWidth = (): { lg: boolean | null } => {
+  const [lg, setLg] = useState<boolean | null>(null)
 
   useEffect(() => {
     const changeWidth = (): void => {

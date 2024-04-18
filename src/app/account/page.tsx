@@ -1,11 +1,14 @@
-import React from 'react'
+'use server'
 
-const Account = (): React.JSX.Element => {
+import React from 'react'
+import Account from './account'
+import { cookies } from 'next/headers'
+
+export default async function Page (): Promise<React.JSX.Element> {
+  const cookieStore = cookies()
+  const session = cookieStore.get('session')
+  console.log(session?.value)
   return (
-    <div>
-        Sorry, page under construction!
-    </div>
+    <Account />
   )
 }
-
-export default Account
