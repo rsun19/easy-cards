@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/promise-function-async */
+'use client'
 import React from 'react'
+import { signIn } from 'next-auth/react'
 
 const Navbar = (): React.JSX.Element => {
   return (
@@ -17,7 +21,9 @@ const Navbar = (): React.JSX.Element => {
             </a>
             </div>
             <div>
-            <a href="/login" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Log in</a>
+            <div onClick={() => signIn('google', { callbackUrl: '/api/token/request' })} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0 cursor-pointer">
+                Log in
+            </div>
             </div>
         </div>
     </nav>
