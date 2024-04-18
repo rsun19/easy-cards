@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import React, { useState } from 'react'
 // import saveCards from './save-cards'
@@ -45,7 +46,7 @@ const Create = (): React.JSX.Element => {
         </div>
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => {
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={async () => {
           const setName = document.getElementById('setName') as HTMLInputElement
           const cardMapping = new Map<string, string>()
           cards.forEach((card) => {
@@ -54,8 +55,7 @@ const Create = (): React.JSX.Element => {
             const answerElement = document.getElementById(`${id}-answer`) as HTMLInputElement
             cardMapping.set(questionElement.value, answerElement.value)
           })
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          saveCards(setName.value, cardMapping)
+          await saveCards(setName.value, cardMapping)
         }}>
           Submit
         </div>
