@@ -1,5 +1,16 @@
-/* .flashcard {
+.flashcard {
     transform-style: preserve-3d;
-    transition: transform 0.3s;
+    transition: transform 0.5s;
+}
+
+.flip-card {
     transform: rotateX(180deg);
-} */
+}
+
+.flashcard-content {
+    transform-style: preserve-3d;
+}
+
+.flashcard-content-flip {
+    transform: rotateX(180deg);
+}
