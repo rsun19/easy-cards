@@ -1,7 +1,8 @@
+'use server'
 import Navbar from './components/navbar'
 import React from 'react'
 
-export default function Home (): React.JSX.Element {
+export default async function Home (): Promise<React.JSX.Element> {
   return (
     <>
       <Navbar />

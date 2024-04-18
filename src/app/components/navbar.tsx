@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/promise-function-async */
-'use client'
+'use server'
 import React from 'react'
-import { auth, signIn } from '../../auth'
-import serverSignIn from './server-sign-in'
+import { auth } from '../../auth'
 
 export default async function Navbar (): Promise<React.JSX.Element> {
   const session = await auth()
@@ -19,9 +18,9 @@ export default async function Navbar (): Promise<React.JSX.Element> {
     } else {
       return (
         <div>
-            <div onClick={() => serverSignIn()} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0 cursor-pointer">
+            <a href='/api/login' className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0 cursor-pointer">
                 Log in
-            </div>
+            </a>
         </div>
       )
     }
