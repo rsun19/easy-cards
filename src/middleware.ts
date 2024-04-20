@@ -9,8 +9,11 @@ export async function middleware (request: NextRequest): Promise<NextResponse> {
         NextResponse.redirect(new URL('/api/signout', request.url))
       }
     }
+  } else if (
+    request.nextUrl.pathname.startsWith('/create') ||
+    request.nextUrl.pathname.startsWith('/flashcard') ||
+    request.nextUrl.pathname.startsWith('/account')) {
+    NextResponse.redirect(new URL('/api/login', request.url))
   }
-  const cookie = request.cookies.get('session')
-  console.log(cookie)
   return NextResponse.next()
 }
