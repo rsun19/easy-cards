@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Search = (): React.JSX.Element => {
+const Sets = (): React.JSX.Element => {
   return (
     <div>
         Sorry, page under construction!
@@ -8,4 +8,4 @@ const Search = (): React.JSX.Element => {
   )
 }
 
-export default Search
+export default Sets

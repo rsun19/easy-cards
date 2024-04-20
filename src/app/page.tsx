@@ -1,9 +1,10 @@
+'use server'
 import Navbar from './components/navbar'
 import React from 'react'
 
-export default function Home (): React.JSX.Element {
+export default async function Home (): Promise<React.JSX.Element> {
   return (
-    <>
+    <div className='h-lvh bg-teal-400'>
       <Navbar />
       <div className='bg-teal-400 flex flex-col gap-10 justify-center items-center text-white' style={{ height: '95vh' }}>
         <div className='text-4xl'>
@@ -16,6 +17,6 @@ export default function Home (): React.JSX.Element {
           Create a new set today!
         </a>
       </div>
-    </>
+    </div>
   )
 }
