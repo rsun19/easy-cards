@@ -2,7 +2,7 @@
 'use client'
 import React, { useState } from 'react'
 // import saveCards from './save-cards'
-import Card from './card'
+import Card from '../components/card'
 import saveCards from './save-cards'
 
 const Create = (): React.JSX.Element => {
@@ -16,13 +16,18 @@ const Create = (): React.JSX.Element => {
   }
 
   function removeCard (id: string): void {
-    const newCardsList = cards
-    for (let i = 0; i < cards.length; ++i) {
-      if (cards[i].props.id === id) {
-        newCardsList.splice(i, 1)
-      }
-    }
-    setCards(newCardsList)
+    console.log(cards)
+
+    setCards(cards => {
+      const newCardsList = [...cards]
+      console.log(newCardsList)
+      for (let i = 0; i < cards.length; ++i) {
+        if (cards[i].props.id === id) {
+          newCardsList.splice(i, 1)
+        }
+      }console.log(newCardsList)
+      return newCardsList
+    })
   }
 
   return (

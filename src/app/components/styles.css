@@ -2,6 +2,16 @@
     display: none;
 }
 
-/* .dropdown-show {
-    display: block;
-} */
+.ql-toolbar {
+    border: 1px solid;
+    border-radius: 8px 8px 0 0;
+}
+
+.ql-container {
+    border: 1px solid;
+    border-radius: 0px 0px 8px 8px;
+}
+
+.ql-ui {
+    color: black !important;
+}

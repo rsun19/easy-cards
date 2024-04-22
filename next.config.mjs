@@ -2,7 +2,9 @@
 /*
 https://medium.com/@rohitkumarkhatri/next-auth-in-app-router-of-next-js-7df037f7a2ad
 */
+
 const nextConfig = {
+    reactStrictMode: false,
     images: {
       remotePatterns: [
         {
