@@ -2,12 +2,12 @@
 import React from 'react'
 import Navbar from '../../components/navbar'
 
-const LoginFailure = (): React.JSX.Element => {
+const LoginFailure = async (): Promise<React.JSX.Element> => {
   return (
     <div>
       <Navbar />
       <div>
-      <div className="max-w-md rounded overflow-hidden shadow-lg">
+      <div className="max-w-md rounded overflow-hidden shadow-lg flex items-center justify-items-center">
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2">Login Failure</div>
           <p className="text-gray-700 text-base">
