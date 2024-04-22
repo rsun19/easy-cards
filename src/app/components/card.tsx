@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FiTrash } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
-import Quill from 'quill'
+// import Quill from 'quill'
 
 import hljs from 'highlight.js'
 import './styles.css'
@@ -14,12 +15,35 @@ interface CardProps {
   removeCard: (id: string) => void
 }
 
+const formats = [
+  'background',
+  'bold',
+  'color',
+  'font',
+  'code',
+  'italic',
+  'link',
+  'size',
+  'strike',
+  'script',
+  'underline',
+  'blockquote',
+  'header',
+  'indent',
+  'list',
+  'align',
+  'direction',
+  'code-block',
+  'formula'
+]
+
 // create delete icon...
 const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [value, setValue] = useState('')
   useEffect(() => {
-    setTimeout(() => {
+    const loadQuill = async (): Promise<void> => {
+      const Quill = (await import('quill')).default
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const quillQuestion = new Quill(`#question-${id}`, {
         modules: {
@@ -31,9 +55,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
           ]
         },
         placeholder: 'Compose an epic...',
-        theme: 'snow'
+        theme: 'snow',
+        formats
       })
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const quillAnswer = new Quill(`#answer-${id}`, {
         modules: {
@@ -45,19 +69,23 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
           ]
         },
         placeholder: 'Compose an epic...',
-        theme: 'snow'
+        theme: 'snow',
+        formats
       })
-    }, 250)
-  })
+    }
+    void loadQuill()
+  }, [])
 
   return (
-    <div className='m-3 p-5 shadow-lg rounded-xl mb-5'>
-      <div className='flex justify-items-stretch justify-stretch gap-6 mb-16'>
-        <div className= 'flex-auto'>
+    <div className='m-3 p-5 shadow-sm rounded-xl mb-5 border border-gray-300'>
+      <div className='flex flex-col lg:flex-row gap-6 mb-6 lg:mb-24'>
+        <div className= 'basis-1/2'>
+          <div className='text-xl mb-1'>Term</div>
           <div id={`question-${id}`}>
           </div>
         </div>
-        <div className= 'flex-auto'>
+        <div className= 'basis-1/2'>
+          <div className='text-xl mb-1'>Definition</div>
           <div id={`answer-${id}`}>
           </div>
         </div>

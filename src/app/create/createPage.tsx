@@ -35,7 +35,7 @@ const Create = (): React.JSX.Element => {
       <div className='create-container'>
       <h2 className="ml-3 my-3 text-xl" >Create Flash Cards</h2>
       <div className='m-3'>
-        <input type="text" id="setName" placeholder="Name your set" className= 'block rounded-lg py-2 px-3 border border-gray-300 bg-gray-50'/>
+        <input type="text" id="setName" placeholder="Name your set" className= 'w-full block rounded-lg py-2 px-3 border border-gray-300 bg-gray-50'/>
       </div>
       <h3 className='ml-3 mb-3'></h3>
       <div>
@@ -56,9 +56,14 @@ const Create = (): React.JSX.Element => {
           const cardMapping = new Map<string, string>()
           cards.forEach((card) => {
             const id = card.props.id
-            const questionElement = document.getElementById(`${id}-question`) as HTMLInputElement
-            const answerElement = document.getElementById(`${id}-answer`) as HTMLInputElement
-            cardMapping.set(questionElement.value, answerElement.value)
+            const questionDiv = document.getElementById(`question-${id}`)
+            const questionContents = questionDiv?.querySelector('.ql-editor')?.innerHTML
+            const answerDiv = document.getElementById(`answer-${id}`)
+            const answerContents = answerDiv?.querySelector('.ql-editor')?.innerHTML
+            if (typeof questionContents !== 'undefined' &&
+                typeof answerContents !== 'undefined') {
+              cardMapping.set(questionContents, answerContents)
+            }
           })
           await saveCards(setName.value, cardMapping)
         }}>
