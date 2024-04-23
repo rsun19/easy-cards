@@ -1,13 +1,19 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import React, { useState } from 'react'
-// import saveCards from './save-cards'
 import Card from '../components/card'
-import saveCards from './save-cards'
 
-const Create = (): React.JSX.Element => {
+type CardMapping = [string, [string]]
+
+interface CreateProps {
+  cookie: string
+}
+
+const Create: React.FC<CreateProps> = ({ cookie }): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
   const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
+
+  const cookieInfo = JSON.parse(cookie)
+  const userId = cookieInfo.id
 
   function addCards (): void {
     const newCardNum = cardNum
@@ -28,6 +34,28 @@ const Create = (): React.JSX.Element => {
       }console.log(newCardsList)
       return newCardsList
     })
+  }
+
+  async function saveCards (title: string, cards: CardMapping[]): Promise<void> {
+    const setMap = {
+      title,
+      cards
+    }
+    const response = await fetch(`${process.env.API_URL}/auth/token/request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: userId,
+        setMap
+      })
+    })
+    if (response.ok) {
+      console.log('res ok')
+    } else {
+      console.log('set err')
+    }
   }
 
   return (
@@ -51,9 +79,9 @@ const Create = (): React.JSX.Element => {
         </div>
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={async () => {
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => {
           const setName = document.getElementById('setName') as HTMLInputElement
-          const cardMapping = new Map<string, string>()
+          const cardMapping: CardMapping[] = []
           cards.forEach((card) => {
             const id = card.props.id
             const questionDiv = document.getElementById(`question-${id}`)
@@ -62,10 +90,10 @@ const Create = (): React.JSX.Element => {
             const answerContents = answerDiv?.querySelector('.ql-editor')?.innerHTML
             if (typeof questionContents !== 'undefined' &&
                 typeof answerContents !== 'undefined') {
-              cardMapping.set(questionContents, answerContents)
+              cardMapping.push([questionContents, [answerContents]])
             }
           })
-          await saveCards(setName.value, cardMapping)
+          void saveCards(setName.value, cardMapping)
         }}>
           Submit
         </div>
