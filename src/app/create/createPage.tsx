@@ -1,19 +1,17 @@
 'use client'
 import React, { useState } from 'react'
 import Card from '../components/card'
+import { getCookie, setCookie } from 'cookies-next'
+import { insertSet } from '../lib/insertSet'
+import { getAccessToken } from '../lib/getAccessToken'
+import { useRouter } from 'next/navigation'
 
 type CardMapping = [string, [string]]
 
-interface CreateProps {
-  cookie: string
-}
-
-const Create: React.FC<CreateProps> = ({ cookie }): React.JSX.Element => {
+const Create = (): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
   const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
-
-  const cookieInfo = JSON.parse(cookie)
-  const userId = cookieInfo.id
+  const router = useRouter()
 
   function addCards (): void {
     const newCardNum = cardNum
@@ -41,20 +39,27 @@ const Create: React.FC<CreateProps> = ({ cookie }): React.JSX.Element => {
       title,
       cards
     }
-    const response = await fetch(`${process.env.API_URL}/auth/token/request`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        id: userId,
-        setMap
-      })
-    })
+    const cookieData = getCookie('session')
+    const response = await insertSet(cookieData as string, JSON.stringify(setMap))
     if (response.ok) {
-      console.log('res ok')
+      router.push('/')
     } else {
-      console.log('set err')
+      const response = await getAccessToken(cookieData as string)
+      if (response.ok) {
+        const textResponse = await response.text()
+        setCookie('session', textResponse, {
+          httpOnly: true,
+          maxAge: 60 * 30 // 30 minutes
+        })
+        const secondTry = await insertSet(textResponse, JSON.stringify(setMap))
+        if (secondTry.ok) {
+          router.push('/')
+        } else {
+          alert('Set failed to save')
+        }
+      } else {
+        router.push('/api/signout')
+      }
     }
   }
 
