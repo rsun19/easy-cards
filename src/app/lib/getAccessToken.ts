@@ -1,12 +1,10 @@
-export async function getAccessToken (cookie: string): Promise<Response> {
-  const response = await fetch(`${process.env.API_URL}/auth/token/refresh`, {
-    method: 'POST',
+export async function getAccessToken (refreshToken: string): Promise<Response> {
+  const response = await fetch('http://localhost:9000/auth/token/refresh', {
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      cookie
-    })
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${refreshToken}`
+    }
   })
   return response
 }

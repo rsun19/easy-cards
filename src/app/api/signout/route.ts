@@ -6,7 +6,6 @@ export async function GET (request: NextRequest): Promise<void> {
   const cookieData = cookies()
   if (cookieData.has('session')) {
     cookieData.delete('session')
-    console.log(cookieData.getAll())
   }
   await signOut()
 }

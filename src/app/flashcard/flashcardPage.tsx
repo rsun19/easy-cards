@@ -44,7 +44,7 @@ const FlashcardPage = (): React.JSX.Element => {
   }, [flashcardList])
 
   return (
-    <div>
+    <>
         <div className='m-5' style={{ height: '75vh' }}>
             {flashcardList[flashcardIdx]}
         </div>
@@ -60,7 +60,7 @@ const FlashcardPage = (): React.JSX.Element => {
             </div>
             </div>
         </div>
-    </div>
+    </>
   )
 }
 

@@ -1,14 +1,18 @@
 'use client'
 import React, { useState } from 'react'
 import Card from '../components/card'
-import { getCookie, setCookie } from 'cookies-next'
 import { insertSet } from '../lib/insertSet'
 import { getAccessToken } from '../lib/getAccessToken'
 import { useRouter } from 'next/navigation'
 
-type CardMapping = [string, [string]]
+type CardMapping = [string, [string], number]
 
-const Create = (): React.JSX.Element => {
+interface CreateProps {
+  accessToken: string
+  refreshToken: string
+}
+
+const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
   const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
   const router = useRouter()
@@ -39,26 +43,23 @@ const Create = (): React.JSX.Element => {
       title,
       cards
     }
-    const cookieData = getCookie('session')
-    const response = await insertSet(cookieData as string, JSON.stringify(setMap))
+    const response = await insertSet(accessToken, JSON.stringify(setMap))
     if (response.ok) {
       router.push('/')
     } else {
-      const response = await getAccessToken(cookieData as string)
+      const response = await getAccessToken(refreshToken)
       if (response.ok) {
         const textResponse = await response.text()
-        setCookie('session', textResponse, {
-          httpOnly: true,
-          maxAge: 60 * 30 // 30 minutes
-        })
-        const secondTry = await insertSet(textResponse, JSON.stringify(setMap))
+        const textResponseJSON = JSON.parse(textResponse)
+        console.log(textResponseJSON.accessToken)
+        const secondTry = await insertSet(textResponseJSON.accessToken as string, JSON.stringify(setMap))
         if (secondTry.ok) {
           router.push('/')
         } else {
           alert('Set failed to save')
         }
       } else {
-        router.push('/api/signout')
+        // router.push('/api/signout')
       }
     }
   }
@@ -95,7 +96,7 @@ const Create = (): React.JSX.Element => {
             const answerContents = answerDiv?.querySelector('.ql-editor')?.innerHTML
             if (typeof questionContents !== 'undefined' &&
                 typeof answerContents !== 'undefined') {
-              cardMapping.push([questionContents, [answerContents]])
+              cardMapping.push([questionContents, [answerContents], 0])
             }
           })
           void saveCards(setName.value, cardMapping)

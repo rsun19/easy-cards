@@ -1,16 +1,13 @@
-export async function insertSet (cookie: string, setMap: string): Promise<Response> {
-  const cookieData = JSON.parse(cookie)
-  const bodyMap = {
-    user: cookie,
-    setMap
-  }
-  const response = await fetch(`${process.env.API_URL}/api/send/set`, {
+export async function insertSet (accessToken: string, setMap: string): Promise<Response> {
+  console.log(setMap)
+  const url = 'http://localhost:9000'
+  const response = await fetch(`${url}/api/set/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${cookieData.accessToken}`
+      Authorization: `Bearer ${accessToken}`
     },
-    body: JSON.stringify(bodyMap)
+    body: setMap
   })
   return response
 }
