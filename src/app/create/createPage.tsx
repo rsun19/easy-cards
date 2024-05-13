@@ -1,13 +1,21 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import React, { useState } from 'react'
-// import saveCards from './save-cards'
 import Card from '../components/card'
-import saveCards from './save-cards'
+import { insertSet } from '../lib/insertSet'
+import { getAccessToken } from '../lib/getAccessToken'
+import { useRouter } from 'next/navigation'
 
-const Create = (): React.JSX.Element => {
+type CardMapping = [string, [string], number]
+
+interface CreateProps {
+  accessToken: string
+  refreshToken: string
+}
+
+const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0)
   const [cards, setCards] = useState([<Card key='0' id='0' removeCard={removeCard}/>])
+  const router = useRouter()
 
   function addCards (): void {
     const newCardNum = cardNum
@@ -28,6 +36,32 @@ const Create = (): React.JSX.Element => {
       }console.log(newCardsList)
       return newCardsList
     })
+  }
+
+  async function saveCards (title: string, cards: CardMapping[]): Promise<void> {
+    const setMap = {
+      title,
+      cards
+    }
+    const response = await insertSet(accessToken, JSON.stringify(setMap))
+    if (response.ok) {
+      router.push('/')
+    } else {
+      const response = await getAccessToken(refreshToken)
+      if (response.ok) {
+        const textResponse = await response.text()
+        const textResponseJSON = JSON.parse(textResponse)
+        console.log(textResponseJSON.accessToken)
+        const secondTry = await insertSet(textResponseJSON.accessToken as string, JSON.stringify(setMap))
+        if (secondTry.ok) {
+          router.push('/')
+        } else {
+          alert('Set failed to save')
+        }
+      } else {
+        // router.push('/api/signout')
+      }
+    }
   }
 
   return (
@@ -51,9 +85,9 @@ const Create = (): React.JSX.Element => {
         </div>
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={async () => {
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => {
           const setName = document.getElementById('setName') as HTMLInputElement
-          const cardMapping = new Map<string, string>()
+          const cardMapping: CardMapping[] = []
           cards.forEach((card) => {
             const id = card.props.id
             const questionDiv = document.getElementById(`question-${id}`)
@@ -62,10 +96,10 @@ const Create = (): React.JSX.Element => {
             const answerContents = answerDiv?.querySelector('.ql-editor')?.innerHTML
             if (typeof questionContents !== 'undefined' &&
                 typeof answerContents !== 'undefined') {
-              cardMapping.set(questionContents, answerContents)
+              cardMapping.push([questionContents, [answerContents], 0])
             }
           })
-          await saveCards(setName.value, cardMapping)
+          void saveCards(setName.value, cardMapping)
         }}>
           Submit
         </div>

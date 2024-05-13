@@ -4,7 +4,7 @@ import Navbar from '../../components/navbar'
 
 const LoginFailure = async (): Promise<React.JSX.Element> => {
   return (
-    <div>
+    <>
       <Navbar />
       <div>
       <div className="max-w-md rounded overflow-hidden shadow-lg flex items-center justify-items-center">
@@ -16,7 +16,7 @@ const LoginFailure = async (): Promise<React.JSX.Element> => {
         </div>
       </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -2,7 +2,7 @@
 import Navbar from '../../../../components/navbar'
 import React from 'react'
 
-const TokenFailure = (): React.JSX.Element => {
+const TokenFailure = async (): Promise<React.JSX.Element> => {
   return (
     <div>
       <Navbar />
