@@ -4,6 +4,7 @@ import Card from '../components/card'
 import { insertSet } from '../lib/insertSet'
 import { getAccessToken } from '../lib/getAccessToken'
 import { useRouter } from 'next/navigation'
+import { type AccessTokenResponse } from '@/types'
 
 type CardMapping = [string, [string], number]
 
@@ -50,16 +51,15 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
       const response = await getAccessToken(refreshToken)
       if (response.ok) {
         const textResponse = await response.text()
-        const textResponseJSON = JSON.parse(textResponse)
-        console.log(textResponseJSON.accessToken)
-        const secondTry = await insertSet(textResponseJSON.accessToken as string, JSON.stringify(setMap))
+        const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
+        const secondTry = await insertSet(textResponseJSON.accessToken, JSON.stringify(setMap))
         if (secondTry.ok) {
           router.push('/')
         } else {
           alert('Set failed to save')
         }
       } else {
-        // router.push('/api/signout')
+        router.push('/api/signout')
       }
     }
   }
