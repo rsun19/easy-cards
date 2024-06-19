@@ -3,7 +3,6 @@ import { type AccessTokenResponse } from '@/types'
 import { getUserSets } from './getUserSets'
 import { getAccessToken } from './getAccessToken'
 import SetCard from '../sets/setCard'
-import { redirect } from 'next/navigation'
 
 export const requestSet = async (accessToken: string, refreshToken: string): Promise<React.JSX.Element[]> => {
   let userSetData = await getUserSets(accessToken)
@@ -18,7 +17,7 @@ export const requestSet = async (accessToken: string, refreshToken: string): Pro
         return []
       }
     } else {
-      redirect('/api/signout')
+      throw new Error('Cannot request set')
     }
   }
   if (userSetData === null) {

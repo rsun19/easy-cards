@@ -9,9 +9,12 @@ interface PageParams {
   params: {
     slug: string
   }
+  searchParams: {
+    username: string
+  }
 }
 
-const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
+const Page = async ({ params, searchParams }: PageParams): Promise<React.JSX.Element> => {
   const cookie = cookies().get('session')
   if (typeof cookie === 'undefined') {
     return (
@@ -22,12 +25,15 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
   }
   const cookieData: RefreshTokenResponse = JSON.parse(cookie.value)
 
-  const flashcards = await getFlashcards(cookieData.accessToken, cookieData.refreshToken, params.slug)
+  const flashcards = await getFlashcards(cookieData.accessToken, cookieData.refreshToken, params.slug, searchParams.username)
 
   return (
       <>
         <Navbar />
-        {flashcards}
+        <div className='mt-3 text-center text-2xl'>
+        {flashcards?.set.name}
+        </div>
+        {flashcards?.flashcards}
       </>
   )
 }

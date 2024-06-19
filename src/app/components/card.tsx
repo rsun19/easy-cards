@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { FiTrash } from 'react-icons/fi'
 import React, { useEffect, useState } from 'react'
-// import Quill from 'quill'
-
 import hljs from 'highlight.js'
 import './styles.css'
 import 'quill/dist/quill.snow.css'
 import 'highlight.js/styles/github-dark.css'
-
-// const Quill = dynamic(() => import('quill'), { ssr: false })
 
 interface CardProps {
   id: string

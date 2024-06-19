@@ -16,9 +16,10 @@ const Page = async (): Promise<React.JSX.Element> => {
   }
 
   const cookieData: RefreshTokenResponse = JSON.parse(cookie.value)
-  const sets = await requestSet(cookieData.accessToken, cookieData.refreshToken)
+  try {
+    const sets = await requestSet(cookieData.accessToken, cookieData.refreshToken)
 
-  return (
+    return (
     <>
       <Navbar />
       <br />
@@ -26,7 +27,14 @@ const Page = async (): Promise<React.JSX.Element> => {
       <br />
       {sets}
     </>
-  )
+    )
+  } catch (e) {
+    return (
+    <>
+        access denied.
+      </>
+    )
+  }
 }
 
 export default Page
