@@ -2,31 +2,17 @@
 import React from 'react'
 import Navbar from '../../components/navbar'
 import { cookies } from 'next/headers'
-import Set from './set'
+import { getFlashcards } from '@/app/lib/getFlashcards'
+import { type RefreshTokenResponse } from '@/types'
 
 interface PageParams {
   params: {
     slug: string
   }
-  searchParams: {
-    id: string
-    name: string
-    author: string
-  }
 }
 
-const Page = async ({ params, searchParams }: PageParams): Promise<React.JSX.Element> => {
+const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
   const cookie = cookies().get('session')
-  const flashcardData = [
-    {
-      question: 'q1',
-      answer: ['answer1']
-    },
-    {
-      question: 'q2',
-      answer: ['answer2']
-    }
-  ]
   if (typeof cookie === 'undefined') {
     return (
         <>
@@ -34,11 +20,14 @@ const Page = async ({ params, searchParams }: PageParams): Promise<React.JSX.Ele
         </>
     )
   }
-  // const cookieData: RefreshTokenResponse = JSON.parse(cookie.value)
+  const cookieData: RefreshTokenResponse = JSON.parse(cookie.value)
+
+  const flashcards = await getFlashcards(cookieData.accessToken, cookieData.refreshToken, params.slug)
+
   return (
       <>
         <Navbar />
-        <Set cards={flashcardData} />
+        {flashcards}
       </>
   )
 }

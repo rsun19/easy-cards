@@ -14,8 +14,7 @@ const SetCard: React.FC<SetProps> = ({ id, name, author }): React.JSX.Element =>
     <div className="max-w rounded-lg overflow-hidden border mx-5 mb-5">
       <Link
         href={{
-          pathname: `/sets/${id}`,
-          query: { id, name, author }
+          pathname: `/sets/${id}`
         }} className='cursor-pointer'>
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2">{name}</div>

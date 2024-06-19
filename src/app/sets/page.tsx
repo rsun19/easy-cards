@@ -2,7 +2,6 @@
 import React from 'react'
 import Navbar from '../components/navbar'
 import { cookies } from 'next/headers'
-import Set from './sets'
 import { type RefreshTokenResponse } from '@/types'
 import { requestSet } from '../lib/requestSet'
 
@@ -25,7 +24,7 @@ const Page = async (): Promise<React.JSX.Element> => {
       <br />
       <p className='text-center text-2xl'>Sets:</p>
       <br />
-      <Set sets={sets} />
+      {sets}
     </>
   )
 }
