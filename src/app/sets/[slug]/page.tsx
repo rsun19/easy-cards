@@ -4,7 +4,18 @@ import Navbar from '../../components/navbar'
 import { cookies } from 'next/headers'
 import Set from './set'
 
-const Page = async ({ params }: { params: { slug: string } }): Promise<React.JSX.Element> => {
+interface PageParams {
+  params: {
+    slug: string
+  }
+  searchParams: {
+    id: string
+    name: string
+    author: string
+  }
+}
+
+const Page = async ({ params, searchParams }: PageParams): Promise<React.JSX.Element> => {
   const cookie = cookies().get('session')
   const flashcardData = [
     {
