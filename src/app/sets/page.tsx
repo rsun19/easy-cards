@@ -2,45 +2,28 @@
 import React from 'react'
 import Navbar from '../components/navbar'
 import { cookies } from 'next/headers'
-import SetCard from './setCard'
-import { type UserSetCards } from '@/types'
+import Set from './sets'
+import { type RefreshTokenResponse } from '@/types'
 
-const Sets = async (): Promise<React.JSX.Element> => {
-  const cookie = cookies().get('session')?.value
-  if (typeof cookie !== 'undefined') {
-    // const cookieData = JSON.parse(cookie)
-    const setData: UserSetCards[] = [
-      {
-        id: 1,
-        username: 'sample username',
-        name: 'sample set'
-      },
-      {
-        id: 2,
-        username: 'sample username 2',
-        name: 'cool set'
-      }
-    ]
-    return (
-      <>
-        <Navbar />
-        <br />
-        {
-          setData.map((set) => {
-            return (
-              <SetCard key={set.id.toString()} author={set.username} name={set.name} />
-            )
-          })
-        }
-      </>
-    )
-  } else {
+const Page = async (): Promise<React.JSX.Element> => {
+  const cookie = cookies().get('session')
+  if (typeof cookie === 'undefined') {
     return (
       <>
         access denied.
       </>
     )
   }
+  const cookieData: RefreshTokenResponse = JSON.parse(cookie.value)
+  return (
+    <>
+      <Navbar />
+      <br />
+      <p className='text-center text-2xl'>Sets:</p>
+      <br />
+      <Set accessToken={cookieData.accessToken} refreshToken={cookieData.refreshToken} />
+    </>
+  )
 }
 
-export default Sets
+export default Page

@@ -25,8 +25,6 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
   }
 
   function removeCard (id: string): void {
-    console.log(cards)
-
     setCards(cards => {
       const newCardsList = [...cards]
       console.log(newCardsList)
@@ -39,7 +37,7 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
     })
   }
 
-  async function saveCards (title: string, cards: CardMapping[]): Promise<void> {
+  const saveCards = async (title: string, cards: CardMapping[]): Promise<void> => {
     const setMap = {
       title,
       cards
