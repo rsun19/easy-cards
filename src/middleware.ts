@@ -19,18 +19,22 @@ export async function middleware (request: NextRequest): Promise<NextResponse> {
         https://github.com/vercel/next.js/issues/49442
         */
         const responseUrl = NextResponse.redirect(request.url)
-        const response: Response = await getAccessToken(sessionMap.refreshToken)
-        const responseText = await response.text()
-        const responseTextJson = JSON.parse(responseText)
-        sessionMap.accessToken = responseTextJson.accessToken
-        sessionMap.accessTokenExpires = responseTextJson.accessTokenExpires
-        responseUrl.cookies.set('session', JSON.stringify(sessionMap), {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 60 * 60 * 24 * 7 * 4, // One month
-          path: '/'
-        })
-        return responseUrl
+        try {
+          const response: Response = await getAccessToken(sessionMap.refreshToken)
+          const responseText = await response.text()
+          const responseTextJson = JSON.parse(responseText)
+          sessionMap.accessToken = responseTextJson.accessToken
+          sessionMap.accessTokenExpires = responseTextJson.accessTokenExpires
+          responseUrl.cookies.set('session', JSON.stringify(sessionMap), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 24 * 7 * 4, // One month
+            path: '/'
+          })
+          return responseUrl
+        } catch (e) {
+          return NextResponse.redirect(new URL('/api/signout', request.url))
+        }
       }
     }
   } else if (

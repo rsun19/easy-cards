@@ -20,3 +20,14 @@ export interface Flashcards {
   question: string
   answer: string[]
 }
+
+export interface QuestionType {
+  id: number
+  question: string
+}
+
+export interface AnswerType {
+  id: number
+  isCorrect: boolean
+  answer: string
+}

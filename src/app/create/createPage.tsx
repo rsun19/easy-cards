@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import React, { useState } from 'react'
 import Card from '../components/card'
@@ -5,6 +6,8 @@ import { insertSet } from '../lib/insertSet'
 import { getAccessToken } from '../lib/getAccessToken'
 import { useRouter } from 'next/navigation'
 import { type AccessTokenResponse } from '@/types'
+import 'quill/dist/quill.snow.css'
+import { validateQuillContents } from '../lib/utils'
 
 type CardMapping = [string, [string], number]
 
@@ -46,17 +49,21 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
     if (response.ok) {
       router.push('/')
     } else {
-      const response = await getAccessToken(refreshToken)
-      if (response.ok) {
-        const textResponse = await response.text()
-        const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
-        const secondTry = await insertSet(textResponseJSON.accessToken, JSON.stringify(setMap))
-        if (secondTry.ok) {
-          router.push('/')
+      try {
+        const response = await getAccessToken(refreshToken)
+        if (response.ok) {
+          const textResponse = await response.text()
+          const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
+          const secondTry = await insertSet(textResponseJSON.accessToken, JSON.stringify(setMap))
+          if (secondTry.ok) {
+            router.push('/')
+          } else {
+            alert('Set failed to save')
+          }
         } else {
-          alert('Set failed to save')
+          router.push('/api/signout')
         }
-      } else {
+      } catch (e) {
         router.push('/api/signout')
       }
     }
@@ -83,18 +90,22 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
         </div>
       </div>
       <div className='my-3 text-center flex items-center justify-center'>
-        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={() => {
+        <div className='py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer' onClick={async () => {
+          const Quill = (await (import('quill'))).default
           const setName = document.getElementById('setName') as HTMLInputElement
           const cardMapping: CardMapping[] = []
           cards.forEach((card) => {
             const id = card.props.id
             const questionDiv = document.getElementById(`question-${id}`)
-            const questionContents = questionDiv?.querySelector('.ql-editor')?.innerHTML
             const answerDiv = document.getElementById(`answer-${id}`)
-            const answerContents = answerDiv?.querySelector('.ql-editor')?.innerHTML
-            if (typeof questionContents !== 'undefined' &&
-                typeof answerContents !== 'undefined') {
-              cardMapping.push([questionContents, [answerContents], 0])
+            if (questionDiv !== null && answerDiv !== null && typeof questionDiv !== 'undefined' &&
+                typeof answerDiv !== 'undefined') {
+              const questionQuill = Quill.find(questionDiv)
+              const answerQuill = Quill.find(answerDiv)
+              if (validateQuillContents(questionQuill) && validateQuillContents(answerQuill)) {
+                // 2nd index is flag to determine correct answer. Will update when features are stabilized.
+                cardMapping.push([JSON.stringify(questionQuill.getContents().ops), [JSON.stringify(answerQuill.getContents().ops)], 0])
+              }
             }
           })
           void saveCards(setName.value, cardMapping)
