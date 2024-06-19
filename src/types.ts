@@ -15,3 +15,8 @@ export interface UserSetCards {
   name: string
   id: number
 }
+
+export interface Flashcards {
+  question: string
+  answer: string[]
+}
