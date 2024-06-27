@@ -18,7 +18,6 @@ const formats = [
   'font',
   'code',
   'italic',
-  'link',
   'size',
   'strike',
   'script',

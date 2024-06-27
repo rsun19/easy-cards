@@ -7,7 +7,7 @@ export default async function Navbar (): Promise<React.JSX.Element> {
   const session = await auth()
 
   return (
-      <div className='w-full bg-teal-400'>
+      <div className='w-full bg-white'>
         <SubNavbar session={session !== null} />
       </div>
   )
