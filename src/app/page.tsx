@@ -1,4 +1,5 @@
 'use server'
+import { Footer } from './components/footer'
 import Navbar from './components/navbar'
 import React from 'react'
 
@@ -17,6 +18,7 @@ export default async function Home (): Promise<React.JSX.Element> {
           Create a new set today!
         </a>
       </div>
+      <Footer />
     </div>
   )
 }
