@@ -19,20 +19,20 @@ export const getFlashcards = async (accessToken: string, refreshToken: string, i
         const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
         userSetData = await getFlashcardsFromAPI(textResponseJSON.accessToken, id)
         if (userSetData === null) {
-          alert('Failed to fetch sets')
+          console.log('Failed to fetch sets')
           return null
         }
       } else {
-        alert('Failed to fetch sets')
+        console.log('Failed to fetch sets')
         return null
       }
     } catch (e) {
-      alert('Failed to fetch sets')
+      console.log('Failed to fetch sets')
       return null
     }
   }
   if (userSetData === null) {
-    alert('Sets failed to load')
+    console.log('Sets failed to load')
   } else {
     const responseData = JSON.parse(userSetData)
     const flashcards = []

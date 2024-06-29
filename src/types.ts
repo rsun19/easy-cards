@@ -31,3 +31,10 @@ export interface AnswerType {
   isCorrect: boolean
   answer: string
 }
+
+export interface SetType {
+  key: string
+  id: number
+  author: string
+  name: string
+}

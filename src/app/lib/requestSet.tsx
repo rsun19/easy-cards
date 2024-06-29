@@ -1,10 +1,8 @@
-import React from 'react'
-import { type AccessTokenResponse } from '@/types'
+import { type SetType, type AccessTokenResponse } from '@/types'
 import { getUserSets } from './getUserSets'
 import { getAccessToken } from './getAccessToken'
-import SetCard from '../sets/setCard'
 
-export const requestSet = async (accessToken: string, refreshToken: string): Promise<React.JSX.Element[]> => {
+export const requestSet = async (accessToken: string, refreshToken: string): Promise<SetType[]> => {
   let userSetData = await getUserSets(accessToken)
   if (userSetData === null) {
     const response = await getAccessToken(refreshToken)
@@ -27,11 +25,12 @@ export const requestSet = async (accessToken: string, refreshToken: string): Pro
     const sets = []
     for (let i = 0; i < responseData.sets.length; i++) {
       sets.push(
-        <SetCard
-        key={i.toString()}
-        id={responseData.sets[i].id.toString()}
-        author={responseData.username}
-        name={responseData.sets[i].name} />
+        {
+          key: i.toString(),
+          id: responseData.sets[i].id,
+          author: responseData.username,
+          name: responseData.sets[i].name
+        }
       )
     }
     return sets

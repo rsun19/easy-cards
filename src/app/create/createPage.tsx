@@ -30,12 +30,11 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
   function removeCard (id: string): void {
     setCards(cards => {
       const newCardsList = [...cards]
-      console.log(newCardsList)
       for (let i = 0; i < cards.length; ++i) {
         if (cards[i].props.id === id) {
           newCardsList.splice(i, 1)
         }
-      }console.log(newCardsList)
+      }
       return newCardsList
     })
   }

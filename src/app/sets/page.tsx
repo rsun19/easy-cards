@@ -4,6 +4,7 @@ import Navbar from '../components/navbar'
 import { cookies } from 'next/headers'
 import { type RefreshTokenResponse } from '@/types'
 import { requestSet } from '../lib/requestSet'
+import SetList from './setList'
 
 const Page = async (): Promise<React.JSX.Element> => {
   const cookie = cookies().get('session')
@@ -25,7 +26,7 @@ const Page = async (): Promise<React.JSX.Element> => {
       <br />
       <p className='text-center text-2xl'>Sets:</p>
       <br />
-      {sets}
+      <SetList accessToken={cookieData.accessToken} refreshToken={cookieData.refreshToken} sets={sets} />
     </>
     )
   } catch (e) {
