@@ -35,7 +35,6 @@ export const getFlashcards = async (accessToken: string, refreshToken: string, i
     const responseData = JSON.parse(userSetData)
     const flashcards = []
     const flashcardsArr = responseData.flashcards
-    console.log(username)
     for (let i = 0; i < flashcardsArr.length; i++) {
       const answers = []
       const question: QuestionType = {

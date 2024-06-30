@@ -43,7 +43,7 @@ const headerData = [
   },
   {
     icon: IconChartPie3,
-    title: 'Smart flashcards',
+    title: 'Smart flashcards (Coming soon!)',
     description: 'It prioritizes what you don\'t know, and helps you study more effectively.'
   },
   {
@@ -84,7 +84,7 @@ const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => 
     <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <Link href={'/'}>Easy Cards</Link>
+          <Link href={'/'} className={classes.link}>Easy Cards</Link>
           <Group h="100%" gap={0} visibleFrom="sm">
             <a href="/" className={classes.link}>
               Home
