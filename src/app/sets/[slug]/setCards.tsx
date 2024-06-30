@@ -14,8 +14,6 @@ interface SetCardProps {
 }
 
 const SetCard: React.FC<SetCardProps> = ({ question, answers }): React.JSX.Element => {
-  console.log(answers[0].answer)
-
   useEffect(() => {
     const loadQuill = async (): Promise<void> => {
       const Quill = (await import('quill')).default

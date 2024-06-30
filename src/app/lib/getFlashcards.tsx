@@ -1,12 +1,10 @@
-import React from 'react'
-import { type AnswerType, type QuestionType, type AccessTokenResponse, type UserSetCards } from '@/types'
+import { type AnswerType, type QuestionType, type AccessTokenResponse, type UserSetCards, type SetCardProps } from '@/types'
 import { getAccessToken } from './getAccessToken'
 import { getFlashcardsFromAPI } from './getFlashcardsFromAPI'
-import SetCard from '../sets/[slug]/setCards'
 
 interface getFlashcardsType {
   set: UserSetCards
-  flashcards: React.JSX.Element[]
+  flashcards: SetCardProps[]
 }
 
 export const getFlashcards = async (accessToken: string, refreshToken: string, id: string, username: string): Promise<getFlashcardsType | null> => {
@@ -54,7 +52,10 @@ export const getFlashcards = async (accessToken: string, refreshToken: string, i
           ? answers.unshift(answer)
           : answers.push(answer)
       }
-      flashcards.push(<SetCard question={question} answers={answers} />)
+      flashcards.push({
+        question,
+        answers
+      })
     }
     const set: UserSetCards = {
       id: responseData.set.id,

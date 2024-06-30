@@ -11,7 +11,7 @@ export const requestSet = async (accessToken: string, refreshToken: string): Pro
       const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
       userSetData = await getUserSets(textResponseJSON.accessToken)
       if (userSetData === null) {
-        alert('Failed to fetch sets')
+        console.log('Failed to fetch sets')
         return []
       }
     } else {
@@ -19,7 +19,7 @@ export const requestSet = async (accessToken: string, refreshToken: string): Pro
     }
   }
   if (userSetData === null) {
-    alert('Sets failed to load')
+    console.log('Sets failed to load')
   } else {
     const responseData = JSON.parse(userSetData)
     const sets = []

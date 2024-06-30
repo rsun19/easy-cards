@@ -33,7 +33,7 @@ import Link from 'next/link'
 const headerData = [
   {
     icon: IconCode,
-    title: 'Easy collaboration',
+    title: 'Easy collaboration (Coming soon with websockets!)',
     description: 'Studying the same topic? Easily make flashcards with your friend.'
   },
   {

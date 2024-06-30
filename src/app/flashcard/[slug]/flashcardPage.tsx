@@ -2,19 +2,22 @@
 import React, { useEffect, useState } from 'react'
 import Flashcard from './flashcard'
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md'
-// import axios from 'axios'
+import { type SetCardProps } from '@/types'
+import { Divider } from '@mantine/core'
 
-const FlashcardPage = (): React.JSX.Element => {
-  // making dummy data
+interface getFlashcardsType {
+  set: string
+  flashcards: SetCardProps[]
+}
+
+const FlashcardPage: React.FC<getFlashcardsType> = ({ flashcards }): React.JSX.Element => {
   const [flashcardIdx, setFlashcardIdx] = useState(0)
   const [flashcardList, setFlashcardList] = useState<React.JSX.Element[]>([])
-  /*
-  Simulating flashcard retrieval
-  */
+
   useEffect(() => {
     const cards: React.JSX.Element[] = []
-    for (let i = 0; i < 10; ++i) {
-      cards.push(<Flashcard key={i} question={i.toString()} answer="answer" />)
+    for (let i = 0; i < flashcards.length; i++) {
+      cards.push(<Flashcard key={i} question={flashcards[i].question} answers={flashcards[i].answers} />)
     }
     console.log(cards)
     setFlashcardList(cards)
@@ -51,13 +54,14 @@ const FlashcardPage = (): React.JSX.Element => {
         <div className='mx-5 max-w-full rounded-xl overflow-hidden shadow-lg text-xl'
         style={{ backgroundColor: 'darkseagreen', color: 'white' }}
         >
-            <div className='py-3 flex items-stretch justify-evenly cursor-pointer'>
-            <div onClick={moveToPrevFlashcard}>
-                <MdNavigateBefore />
-            </div>
-            <div onClick={moveToNextFlashcard}>
-                <MdNavigateNext />
-            </div>
+            <div className='py-3 flex items-stretch justify-evenly'>
+              <div className='cursor-pointer' onClick={moveToPrevFlashcard}>
+                  <MdNavigateBefore />
+              </div>
+              <Divider orientation="vertical"/>
+              <div className='cursor-pointer' onClick={moveToNextFlashcard}>
+                  <MdNavigateNext />
+              </div>
             </div>
         </div>
     </>

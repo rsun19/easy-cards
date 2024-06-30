@@ -38,3 +38,8 @@ export interface SetType {
   author: string
   name: string
 }
+
+export interface SetCardProps {
+  question: QuestionType
+  answers: AnswerType[]
+}

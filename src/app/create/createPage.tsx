@@ -22,9 +22,13 @@ const Create: React.FC<CreateProps> = ({ accessToken, refreshToken }): React.JSX
   const router = useRouter()
 
   function addCards (): void {
-    const newCardNum = cardNum
-    setCardNum(cardNum + 1)
-    setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} removeCard={removeCard}/>])
+    if (cardNum < 700) {
+      const newCardNum = cardNum
+      setCardNum(cardNum + 1)
+      setCards([...cards, <Card key={(newCardNum + 1).toString()} id={(newCardNum + 1).toString()} removeCard={removeCard}/>])
+    } else {
+      alert('A set has a maximum of 700 cards. Please create a new set.')
+    }
   }
 
   function removeCard (id: string): void {

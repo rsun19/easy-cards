@@ -1,6 +1,8 @@
 .flashcard {
     transform-style: preserve-3d;
-    transition: transform 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .flip-card {
@@ -13,4 +15,9 @@
 
 .flashcard-content-flip {
     transform: rotateX(180deg);
+}
+
+.ql-container {
+    border: 0 !important;
+    font-size: 1rem !important;
 }
