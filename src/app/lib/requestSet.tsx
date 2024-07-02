@@ -1,39 +1,40 @@
-import { type SetType, type AccessTokenResponse } from '@/types'
-import { getUserSets } from './getUserSets'
-import { getAccessToken } from './getAccessToken'
+import { type SetType, type AccessTokenResponse } from "@/types";
+import { getUserSets } from "./getUserSets";
+import { getAccessToken } from "./getAccessToken";
 
-export const requestSet = async (accessToken: string, refreshToken: string): Promise<SetType[]> => {
-  let userSetData = await getUserSets(accessToken)
+export const requestSet = async (
+  accessToken: string,
+  refreshToken: string,
+): Promise<SetType[]> => {
+  let userSetData = await getUserSets(accessToken);
   if (userSetData === null) {
-    const response = await getAccessToken(refreshToken)
+    const response = await getAccessToken(refreshToken);
     if (response.ok) {
-      const textResponse = await response.text()
-      const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse)
-      userSetData = await getUserSets(textResponseJSON.accessToken)
+      const textResponse = await response.text();
+      const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse);
+      userSetData = await getUserSets(textResponseJSON.accessToken);
       if (userSetData === null) {
-        console.log('Failed to fetch sets')
-        return []
+        console.log("Failed to fetch sets");
+        return [];
       }
     } else {
-      throw new Error('Cannot request set')
+      throw new Error("Cannot request set");
     }
   }
   if (userSetData === null) {
-    console.log('Sets failed to load')
+    console.log("Sets failed to load");
   } else {
-    const responseData = JSON.parse(userSetData)
-    const sets = []
+    const responseData = JSON.parse(userSetData);
+    const sets = [];
     for (let i = 0; i < responseData.sets.length; i++) {
-      sets.push(
-        {
-          key: i.toString(),
-          id: responseData.sets[i].id,
-          author: responseData.username,
-          name: responseData.sets[i].name
-        }
-      )
+      sets.push({
+        key: i.toString(),
+        id: responseData.sets[i].id,
+        author: responseData.username,
+        name: responseData.sets[i].name,
+      });
     }
-    return sets
+    return sets;
   }
-  return []
-}
+  return [];
+};

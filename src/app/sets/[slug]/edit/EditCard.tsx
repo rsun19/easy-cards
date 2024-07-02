@@ -5,9 +5,13 @@ import hljs from "highlight.js";
 import "./styles.css";
 import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
+import { type QuestionType, type AnswerType } from "@/types";
+import { type Op } from "quill/core";
 
 interface CardProps {
   id: string;
+  question: QuestionType | null;
+  answers: AnswerType[];
   removeCard: (id: string) => void;
 }
 
@@ -32,7 +36,12 @@ const formats = [
   "formula",
 ];
 
-const Card: React.FC<CardProps> = ({ id, removeCard }) => {
+const EditCard: React.FC<CardProps> = ({
+  id,
+  question,
+  answers,
+  removeCard,
+}) => {
   useEffect(() => {
     const loadQuill = async (): Promise<void> => {
       const Quill = (await import("quill")).default;
@@ -56,6 +65,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
         theme: "snow",
         formats,
       });
+      if (question !== null) {
+        quillQuestion.setContents(JSON.parse(question.question) as Op[]);
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const quillAnswer = new Quill(`#answer-${id}`, {
         modules: {
@@ -76,6 +88,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
         theme: "snow",
         formats,
       });
+      if (answers.length > 0) {
+        quillAnswer.setContents(JSON.parse(answers[0].answer) as Op[]);
+      }
     };
     void loadQuill();
   }, []);
@@ -103,4 +118,4 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   );
 };
 
-export default Card;
+export default EditCard;

@@ -1,30 +1,61 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
-import React, { useState } from "react";
-import Card from "../components/card";
-import { insertSet } from "../lib/insertSet";
-import { getAccessToken } from "../lib/getAccessToken";
+import React, { useEffect, useState } from "react";
+import { getAccessToken } from "../../../lib/getAccessToken";
 import { useRouter } from "next/navigation";
-import { type AccessTokenResponse } from "@/types";
+import { type SetCardProps, type AccessTokenResponse } from "@/types";
 import "quill/dist/quill.snow.css";
-import { validateQuillContents } from "../lib/utils";
+import { validateQuillContents } from "../../../lib/utils";
+import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
+import EditCard from "./EditCard";
+import { editSet } from "@/app/lib/editSet";
 
-type CardMapping = [string, [string], number];
+interface CardMapping {
+  questionId?: number
+  answerId?: number
+  question: string
+  answer: string[]
+  answerIndex: number
+}
 
-interface CreateProps {
+interface EditCardListProps extends GetFlashcardsType {
   accessToken: string;
   refreshToken: string;
 }
 
-const Create: React.FC<CreateProps> = ({
+const EditCardList: React.FC<EditCardListProps> = ({
   accessToken,
   refreshToken,
+  set,
+  flashcards,
 }): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0);
-  const [cards, setCards] = useState([
-    <Card key="0" id="0" removeCard={removeCard} />,
-  ]);
+  const [highestID, setHighestID] = useState(0);
+  const [cards, setCards] = useState<React.JSX.Element[]>([]);
   const router = useRouter();
+  const oldVersionMap = new Map<number, SetCardProps>();
+
+  useEffect(() => {
+    const flashcardsList: React.JSX.Element[] = [];
+    flashcards.forEach((flashcard) => {
+      const newCardNum = cardNum;
+      setCardNum(cardNum + 1);
+      flashcardsList.push(
+        <EditCard
+          key={(newCardNum + 1).toString()}
+          id={flashcard.question.id.toString()}
+          question={flashcard.question}
+          answers={flashcard.answers}
+          removeCard={removeCard}
+        />,
+      );
+      oldVersionMap.set(flashcard.question.id, flashcard);
+      setHighestID(Math.max(highestID, newCardNum + 1));
+    });
+    setCards(flashcardsList);
+    setCardNum(highestID);
+  }, []);
 
   function addCards(): void {
     if (cardNum < 700) {
@@ -32,10 +63,12 @@ const Create: React.FC<CreateProps> = ({
       setCardNum(cardNum + 1);
       setCards([
         ...cards,
-        <Card
+        <EditCard
           key={(newCardNum + 1).toString()}
           id={(newCardNum + 1).toString()}
           removeCard={removeCard}
+          question={null}
+          answers={[]}
         />,
       ]);
     } else {
@@ -56,14 +89,9 @@ const Create: React.FC<CreateProps> = ({
   }
 
   const saveCards = async (
-    title: string,
-    cards: CardMapping[],
+    setMap: string,
   ): Promise<void> => {
-    const setMap = {
-      title,
-      cards,
-    };
-    const response = await insertSet(accessToken, JSON.stringify(setMap));
+    const response = await editSet(accessToken, setMap);
     if (response.ok) {
       router.push("/");
     } else {
@@ -73,10 +101,7 @@ const Create: React.FC<CreateProps> = ({
           const textResponse = await response.text();
           const textResponseJSON: AccessTokenResponse =
             JSON.parse(textResponse);
-          const secondTry = await insertSet(
-            textResponseJSON.accessToken,
-            JSON.stringify(setMap),
-          );
+          const secondTry = await editSet(textResponseJSON.accessToken, setMap);
           if (secondTry.ok) {
             router.push("/");
           } else {
@@ -100,6 +125,7 @@ const Create: React.FC<CreateProps> = ({
             type="text"
             id="setName"
             placeholder="Name your set"
+            value={set?.name}
             className="w-full block rounded-lg py-2 px-3 border border-gray-300 bg-gray-50"
           />
         </div>
@@ -128,6 +154,7 @@ const Create: React.FC<CreateProps> = ({
                 "setName",
               ) as HTMLInputElement;
               const cardMapping: CardMapping[] = [];
+              const editCardMapping: CardMapping[] = [];
               cards.forEach((card) => {
                 const id = card.props.id;
                 const questionDiv = document.getElementById(`question-${id}`);
@@ -145,15 +172,51 @@ const Create: React.FC<CreateProps> = ({
                     validateQuillContents(answerQuill)
                   ) {
                     // 2nd index is flag to determine correct answer. Will update when features are stabilized.
-                    cardMapping.push([
-                      JSON.stringify(questionQuill.getContents().ops),
-                      [JSON.stringify(answerQuill.getContents().ops)],
-                      0,
-                    ]);
+                    const questionContents = JSON.stringify(
+                      questionQuill.getContents().ops,
+                    );
+                    const answerContents = JSON.stringify(
+                      answerQuill.getContents().ops,
+                    );
+                    if (oldVersionMap.has(Number(id))) {
+                      const oldVersionMapValue = oldVersionMap.get(Number(id))
+                      if (
+                        JSON.stringify(
+                          oldVersionMapValue?.question.question !==
+                            questionContents,
+                        ) &&
+                        JSON.stringify(
+                          oldVersionMapValue?.answers[0].answer !==
+                            answerContents,
+                        )
+                      ) {
+                        editCardMapping.push({
+                          questionId: oldVersionMap.get(Number(id))?.question.id,
+                          answerId: oldVersionMap.get(Number(id))?.answers[0].id,
+                          question: questionContents,
+                          answer: [answerContents],
+                          answerIndex: 0
+                        });
+                      }
+                    } else {
+                      cardMapping.push({
+                        question: questionContents, 
+                        answer: [answerContents], 
+                        answerIndex: 0
+                      });
+                    }
                   }
                 }
               });
-              void saveCards(setName.value, cardMapping);
+              if (set !== null) {
+                set.name = setName.value;
+                const cardMappingCombination = {
+                  set,
+                  edit: editCardMapping,
+                  new: cardMapping
+                }
+                void saveCards(JSON.stringify(cardMappingCombination));
+              }
             }}
           >
             Submit
@@ -164,4 +227,4 @@ const Create: React.FC<CreateProps> = ({
   );
 };
 
-export default Create;
+export default EditCardList;

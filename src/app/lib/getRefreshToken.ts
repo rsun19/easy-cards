@@ -1,12 +1,12 @@
-export async function getRefreshToken (email: string): Promise<Response> {
-  const response = await fetch('http://localhost:9000/auth/token/request', {
-    method: 'POST',
+export async function getRefreshToken(email: string): Promise<Response> {
+  const response = await fetch("http://localhost:9000/auth/token/request", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email
-    })
-  })
-  return response
+      email,
+    }),
+  });
+  return response;
 }

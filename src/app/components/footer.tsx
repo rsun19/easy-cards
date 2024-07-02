@@ -1,26 +1,28 @@
-'use client'
+"use client";
 
-import { Container, Group, Anchor, Text } from '@mantine/core'
-import classes from './Footer.module.css'
-import React from 'react'
+import { Container, Group, Anchor, Text } from "@mantine/core";
+import classes from "./Footer.module.css";
+import React from "react";
 
 const links = [
-  { link: '/', label: 'Contact' },
-  { link: '/', label: 'Privacy' }
-]
+  { link: "/", label: "Contact" },
+  { link: "/", label: "Privacy" },
+];
 
-export function Footer (): React.JSX.Element {
+export function Footer(): React.JSX.Element {
   const items = links.map((link) => (
-    <Anchor<'a'>
+    <Anchor<"a">
       c="dimmed"
       key={link.label}
       href={link.link}
-      onClick={(event) => { event.preventDefault() }}
+      onClick={(event) => {
+        event.preventDefault();
+      }}
       size="sm"
     >
       {link.label}
     </Anchor>
-  ))
+  ));
 
   return (
     <div className={classes.footer}>
@@ -29,5 +31,5 @@ export function Footer (): React.JSX.Element {
         <Group className={classes.links}>{items}</Group>
       </Container>
     </div>
-  )
+  );
 }
