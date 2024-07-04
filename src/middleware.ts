@@ -16,7 +16,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         sessionMap.accessTokenExpires <= Math.floor(Date.now() / 1000) &&
         (request.nextUrl.pathname.startsWith("/create") ||
           request.nextUrl.pathname.startsWith("/flashcard") ||
-          request.nextUrl.pathname.startsWith("/account"))
+          request.nextUrl.pathname.startsWith("/account") ||
+          request.nextUrl.pathname.startsWith("/sets")
+        )
       ) {
         /*
         "hacky solution", using redirect...
@@ -46,7 +48,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   } else if (
     request.nextUrl.pathname.startsWith("/create") ||
     request.nextUrl.pathname.startsWith("/flashcard") ||
-    request.nextUrl.pathname.startsWith("/account")
+    request.nextUrl.pathname.startsWith("/account") ||
+    request.nextUrl.pathname.startsWith("/sets")
   ) {
     return NextResponse.redirect(new URL("/api/login", request.url));
   }

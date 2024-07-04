@@ -40,6 +40,14 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
         >
           Study flashcards
         </Button>
+        <Button
+          component={Link}
+          href={`/sets/${flashcards?.set?.id}/edit`}
+          variant="gradient"
+          gradient={{ from: "blue", to: "cyan", deg: 90 }}
+        >
+          Edit flashcards
+        </Button>
       </div>
       {flashcards?.flashcards.map((flashcard, index) => {
         return (

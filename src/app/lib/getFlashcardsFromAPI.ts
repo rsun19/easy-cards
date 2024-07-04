@@ -4,7 +4,7 @@ export const getFlashcardsFromAPI = async (
 ): Promise<string | null> => {
   try {
     const response = await fetch(
-      `http://localhost:9000/api/sets/flashcards/get/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/sets/flashcards/get/${id}`,
       {
         method: "GET",
         headers: {

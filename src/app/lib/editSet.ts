@@ -2,8 +2,7 @@ export async function editSet(
   accessToken: string,
   setMap: string,
 ): Promise<Response> {
-  const url = "http://localhost:9000";
-  const response = await fetch(`${url}/api/set/edit/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/set/edit/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

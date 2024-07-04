@@ -12,7 +12,7 @@ interface CardProps {
   id: string;
   question: QuestionType | null;
   answers: AnswerType[];
-  removeCard: (id: string) => void;
+  removeCard: (id: string) => Promise<void>;
 }
 
 const formats = [
@@ -110,8 +110,8 @@ const EditCard: React.FC<CardProps> = ({
       <FiTrash
         size={30}
         className="cursor-pointer"
-        onClick={() => {
-          removeCard(id);
+        onClick={async () => {
+          await removeCard(id);
         }}
       />
     </div>

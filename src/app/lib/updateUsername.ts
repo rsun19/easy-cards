@@ -2,8 +2,7 @@ export async function updateUsername(
   accessToken: string,
   { username }: { username: string },
 ): Promise<number> {
-  const url = "http://localhost:9000";
-  const response = await fetch(`${url}/api/username/update`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/username/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

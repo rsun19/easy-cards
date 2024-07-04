@@ -2,8 +2,7 @@ export async function deleteSetAPI(
   accessToken: string,
   id: number,
 ): Promise<Response> {
-  const url = "http://localhost:9000";
-  const response = await fetch(`${url}/api/set/delete`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/set/delete`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

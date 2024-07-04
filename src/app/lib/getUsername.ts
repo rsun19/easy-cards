@@ -2,7 +2,7 @@ export const getUsername = async (
   accessToken: string,
 ): Promise<string | null> => {
   try {
-    const response = await fetch("http://localhost:9000/api/username", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/username`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

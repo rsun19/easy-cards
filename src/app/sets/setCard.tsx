@@ -24,7 +24,6 @@ const SetCard: React.FC<SetProps> = ({
         <Link
           href={{
             pathname: `/sets/${id}`,
-            query: { username: author },
           }}
           className="cursor-pointer basis-10/12"
         >

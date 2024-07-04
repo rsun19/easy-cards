@@ -10,11 +10,23 @@ import { validateQuillContents } from "../../../lib/utils";
 import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
 import EditCard from "./EditCard";
 import { editSet } from "@/app/lib/editSet";
+import { deleteCard } from "@/app/lib/deleteCard";
 
 interface CardMapping {
   questionId?: number
   answerId?: number
   question: string
+  answer: string[]
+  answerIndex: number
+}
+
+interface CardQuestion {
+  questionId?: number
+  question: string
+}
+
+interface CardAnswer {
+  answerId?: number
   answer: string[]
   answerIndex: number
 }
@@ -33,8 +45,10 @@ const EditCardList: React.FC<EditCardListProps> = ({
   const [cardNum, setCardNum] = useState(0);
   const [highestID, setHighestID] = useState(0);
   const [cards, setCards] = useState<React.JSX.Element[]>([]);
-  const router = useRouter();
+  // const [oldVersionMap, setOldVersionMap] = useState<Map<number, SetCardProps>>(new Map<number, SetCardProps>());
   const oldVersionMap = new Map<number, SetCardProps>();
+  const router = useRouter();
+  const oldSetName = set?.name
 
   useEffect(() => {
     const flashcardsList: React.JSX.Element[] = [];
@@ -55,6 +69,9 @@ const EditCardList: React.FC<EditCardListProps> = ({
     });
     setCards(flashcardsList);
     setCardNum(highestID);
+    if (set) {
+      (document.getElementById('setName') as HTMLInputElement).value = set.name
+    }
   }, []);
 
   function addCards(): void {
@@ -76,7 +93,23 @@ const EditCardList: React.FC<EditCardListProps> = ({
     }
   }
 
-  function removeCard(id: string): void {
+  async function removeCard(id: string): Promise<void> {
+    if (oldVersionMap.has(Number(id))) {
+      try {
+        const response = await deleteCard(accessToken, Number(id));
+        if (!response.ok) {
+            const textResponse = await response.text();
+            const textResponseJSON: AccessTokenResponse =
+              JSON.parse(textResponse);
+            const secondTry = await deleteCard(textResponseJSON.accessToken, Number(id));
+            if (!secondTry.ok) {
+              alert("Question failed to delete");
+            }
+          }
+        } catch (e) {
+        router.push("/api/signout");
+      }
+    } 
     setCards((cards) => {
       const newCardsList = [...cards];
       for (let i = 0; i < cards.length; ++i) {
@@ -125,7 +158,6 @@ const EditCardList: React.FC<EditCardListProps> = ({
             type="text"
             id="setName"
             placeholder="Name your set"
-            value={set?.name}
             className="w-full block rounded-lg py-2 px-3 border border-gray-300 bg-gray-50"
           />
         </div>
@@ -154,7 +186,8 @@ const EditCardList: React.FC<EditCardListProps> = ({
                 "setName",
               ) as HTMLInputElement;
               const cardMapping: CardMapping[] = [];
-              const editCardMapping: CardMapping[] = [];
+              const editCardQuestion: CardQuestion[] = [];
+              const editCardAnswer: CardAnswer[] = [];
               cards.forEach((card) => {
                 const id = card.props.id;
                 const questionDiv = document.getElementById(`question-${id}`);
@@ -182,18 +215,21 @@ const EditCardList: React.FC<EditCardListProps> = ({
                       const oldVersionMapValue = oldVersionMap.get(Number(id))
                       if (
                         JSON.stringify(
-                          oldVersionMapValue?.question.question !==
-                            questionContents,
-                        ) &&
-                        JSON.stringify(
-                          oldVersionMapValue?.answers[0].answer !==
-                            answerContents,
-                        )
+                          oldVersionMapValue?.question.question) !==
+                            JSON.stringify(questionContents)
                       ) {
-                        editCardMapping.push({
+                        editCardQuestion.push({
                           questionId: oldVersionMap.get(Number(id))?.question.id,
-                          answerId: oldVersionMap.get(Number(id))?.answers[0].id,
                           question: questionContents,
+                        });
+                      }
+                      if (
+                        JSON.stringify(
+                          oldVersionMapValue?.answers[0].answer) !==
+                            JSON.stringify(answerContents)
+                      ) {
+                        editCardAnswer.push({
+                          answerId: oldVersionMap.get(Number(id))?.answers[0].id,
                           answer: [answerContents],
                           answerIndex: 0
                         });
@@ -212,9 +248,12 @@ const EditCardList: React.FC<EditCardListProps> = ({
                 set.name = setName.value;
                 const cardMappingCombination = {
                   set,
-                  edit: editCardMapping,
-                  new: cardMapping
+                  editQuestion: editCardQuestion,
+                  editAnswer: editCardAnswer,
+                  new: cardMapping,
+                  setUpdate: oldSetName !== set.name
                 }
+                console.log(cardMappingCombination)
                 void saveCards(JSON.stringify(cardMappingCombination));
               }
             }}
