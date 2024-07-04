@@ -1,6 +1,6 @@
-'use client'
-import React from 'react'
-import './styles.css'
+"use client";
+import React from "react";
+import "./styles.css";
 import {
   HoverCard,
   Group,
@@ -17,56 +17,66 @@ import {
   Collapse,
   ScrollArea,
   rem,
-  useMantineTheme
-} from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+  useMantineTheme,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconCode,
   IconChartPie3,
   IconFingerprint,
   IconCoin,
-  IconChevronDown
-} from '@tabler/icons-react'
-import classes from './HeaderMegaMenu.module.css'
-import Link from 'next/link'
+  IconChevronDown,
+} from "@tabler/icons-react";
+import classes from "./HeaderMegaMenu.module.css";
+import Link from "next/link";
 
 const headerData = [
   {
     icon: IconCode,
-    title: 'Easy collaboration (Coming soon with websockets!)',
-    description: 'Studying the same topic? Easily make flashcards with your friend.'
+    title: "Easy collaboration (Coming soon with websockets!)",
+    description:
+      "Studying the same topic? Easily make flashcards with your friend.",
   },
   {
     icon: IconCoin,
-    title: 'Free for everyone',
-    description: 'Style your flashcards with rich text and code blocks for free.'
+    title: "Free for everyone",
+    description:
+      "Style your flashcards with rich text and code blocks for free.",
   },
   {
     icon: IconChartPie3,
-    title: 'Smart flashcards (Coming soon!)',
-    description: 'It prioritizes what you don\'t know, and helps you study more effectively.'
+    title: "Smart flashcards (Coming soon!)",
+    description:
+      "It prioritizes what you don't know, and helps you study more effectively.",
   },
   {
     icon: IconFingerprint,
-    title: 'Security',
-    description: 'We use Google Authentication to authenticate users. Gone are the days of storing passwords in databases.'
-  }
-]
+    title: "Security",
+    description:
+      "We use Google Authentication to authenticate users. Gone are the days of storing passwords in databases.",
+  },
+];
 
 interface SubNavbarProps {
-  session: boolean
+  session: boolean;
 }
 
-const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false)
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false)
-  const theme = useMantineTheme()
+const SubNavbar: React.FC<SubNavbarProps> = ({
+  session,
+}): React.JSX.Element => {
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const theme = useMantineTheme();
 
   const links = headerData.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
       <Group wrap="nowrap" align="flex-start">
         <ThemeIcon size={34} variant="default" radius="md">
-          <item.icon style={{ width: rem(22), height: rem(22) }} color={theme.colors.blue[6]} />
+          <item.icon
+            style={{ width: rem(22), height: rem(22) }}
+            color={theme.colors.blue[6]}
+          />
         </ThemeIcon>
         <div>
           <Text size="sm" fw={500}>
@@ -78,18 +88,26 @@ const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => 
         </div>
       </Group>
     </UnstyledButton>
-  ))
+  ));
 
   return (
     <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <Link href={'/'} className={classes.link}>Easy Cards</Link>
+          <Link href={"/"} className={classes.link}>
+            Easy Cards
+          </Link>
           <Group h="100%" gap={0} visibleFrom="sm">
             <a href="/" className={classes.link}>
               Home
             </a>
-            <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
+            <HoverCard
+              width={600}
+              position="bottom"
+              radius="md"
+              shadow="md"
+              withinPortal
+            >
               <HoverCard.Target>
                 <a href="#" className={classes.link}>
                   <Center inline>
@@ -104,7 +122,7 @@ const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => 
                 </a>
               </HoverCard.Target>
 
-              <HoverCard.Dropdown style={{ overflow: 'hidden' }}>
+              <HoverCard.Dropdown style={{ overflow: "hidden" }}>
                 <Group justify="space-between" px="md">
                   <Text fw={500}>Features</Text>
                 </Group>
@@ -125,28 +143,46 @@ const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => 
                         Unlock the Easy Cards magic.
                       </Text>
                     </div>
-                    <Button component={Link} href={'/create'} variant="default">Get started</Button>
+                    <Button component={Link} href={"/create"} variant="default">
+                      Get started
+                    </Button>
                   </Group>
                 </div>
               </HoverCard.Dropdown>
             </HoverCard>
-            {session && <a href="/create" className={classes.link}>
-              Create
-            </a>}
-            {session && <a href="/sets" className={classes.link}>
-              Sets
-            </a>}
+            {session && (
+              <a href="/create" className={classes.link}>
+                Create
+              </a>
+            )}
+            {session && (
+              <a href="/sets" className={classes.link}>
+                Sets
+              </a>
+            )}
           </Group>
 
-          {session && <Group visibleFrom="sm">
-          <Button component={Link} href={'/account'} variant="default">Account</Button>
-          </Group>}
+          {session && (
+            <Group visibleFrom="sm">
+              <Button component={Link} href={"/account"} variant="default">
+                Account
+              </Button>
+            </Group>
+          )}
 
-          {!session && <Group visibleFrom="sm">
-              <Button component={Link} href={'/api/login'} variant="default">Log in with Google</Button>
-          </Group>}
+          {!session && (
+            <Group visibleFrom="sm">
+              <Button component={Link} href={"/api/login"} variant="default">
+                Log in with Google
+              </Button>
+            </Group>
+          )}
 
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+          />
         </Group>
       </header>
 
@@ -177,26 +213,38 @@ const SubNavbar: React.FC<SubNavbarProps> = ({ session }): React.JSX.Element => 
             </Center>
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
-          {session && <a href="/create" className={classes.link}>
-            Create
-          </a>}
-          {session && <a href="/sets" className={classes.link}>
-            My sets
-          </a>}
+          {session && (
+            <a href="/create" className={classes.link}>
+              Create
+            </a>
+          )}
+          {session && (
+            <a href="/sets" className={classes.link}>
+              My sets
+            </a>
+          )}
 
           <Divider my="sm" />
 
-          {session && <Group justify="center" grow pb="xl" px="md">
-            <Button component={Link} href={'/account'} variant="default">Account</Button>
-          </Group>}
+          {session && (
+            <Group justify="center" grow pb="xl" px="md">
+              <Button component={Link} href={"/account"} variant="default">
+                Account
+              </Button>
+            </Group>
+          )}
 
-          {!session && <Group justify="center" grow pb="xl" px="md">
-            <Button component={Link} href={'/api/login'} variant="default">Log in/Sign up</Button>
-          </Group>}
+          {!session && (
+            <Group justify="center" grow pb="xl" px="md">
+              <Button component={Link} href={"/api/login"} variant="default">
+                Log in/Sign up
+              </Button>
+            </Group>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>
-  )
-}
+  );
+};
 
-export default SubNavbar
+export default SubNavbar;

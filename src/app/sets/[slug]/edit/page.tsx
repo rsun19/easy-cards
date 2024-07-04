@@ -1,10 +1,10 @@
 "use server";
 import React from "react";
-import Navbar from "../../components/navbar";
-import FlashcardPage from "./flashcardPage";
+import Navbar from "../../../components/navbar";
+import { cookies } from "next/headers";
 import { getFlashcards } from "@/app/lib/getFlashcards";
 import { type RefreshTokenResponse } from "@/types";
-import { cookies } from "next/headers";
+import EditCardList from "./EditCardList";
 
 interface PageParams {
   params: {
@@ -28,7 +28,12 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
   return (
     <>
       <Navbar />
-      <FlashcardPage
+      <div className="mt-3 text-center text-2xl flex flex-col justify-center items-center gap-3">
+        {flashcards?.set !== null && flashcards?.set.name}
+      </div>
+      <EditCardList
+        accessToken={cookieData.accessToken}
+        refreshToken={cookieData.refreshToken}
         set={flashcards?.set ?? null}
         flashcards={flashcards?.flashcards ?? []}
       />

@@ -1,23 +1,23 @@
 .flashcard {
-    transform-style: preserve-3d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .flip-card {
-    transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
 
 .flashcard-content {
-    transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 .flashcard-content-flip {
-    transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
 
 .ql-container {
-    border: 0 !important;
-    font-size: 1rem !important;
+  border: 0 !important;
+  font-size: 1rem !important;
 }
