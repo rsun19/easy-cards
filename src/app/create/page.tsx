@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "../components/navbar";
 import Create from "./createPage";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Page(): Promise<React.JSX.Element> {
   const cookie = cookies().get("session")?.value;
@@ -17,7 +18,6 @@ export default async function Page(): Promise<React.JSX.Element> {
         />
       </>
     );
-  } else {
-    return <>access denied.</>;
   }
+  redirect('/api/signout')
 }

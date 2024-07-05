@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { type RefreshTokenResponse } from "@/types";
 import { requestSet } from "../lib/requestSet";
 import SetList from "./setList";
+import { redirect } from "next/navigation";
 
 const Page = async (): Promise<React.JSX.Element> => {
   const cookie = cookies().get("session");
@@ -33,7 +34,7 @@ const Page = async (): Promise<React.JSX.Element> => {
       </>
     );
   } catch (e) {
-    return <>access denied.</>;
+    redirect('/api/signout')
   }
 };
 

@@ -6,6 +6,7 @@ import { getUsername } from "../lib/getUsername";
 import { cookies } from "next/headers";
 import { type RefreshTokenResponse } from "@/types";
 import Navbar from "../components/navbar";
+import { redirect } from "next/navigation";
 
 export default async function Page(): Promise<React.JSX.Element> {
   const cookie = cookies().get("session")?.value;
@@ -25,6 +26,5 @@ export default async function Page(): Promise<React.JSX.Element> {
       );
     }
   }
-
-  return <div>Access denied.</div>;
+  redirect('/api/signout')
 }
