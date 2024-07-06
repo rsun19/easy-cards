@@ -13,7 +13,7 @@ export default async function Home(): Promise<React.JSX.Element> {
       >
         <div className="text-4xl">Welcome to Easy Cards</div>
         <div className="text-xl">
-          Edit in real time, or make flashcards using generative AI tools!
+          Create flashcards with a rich text editor!
         </div>
         <a
           href="/create"

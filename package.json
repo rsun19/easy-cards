@@ -19,7 +19,7 @@
     "highlight.js": "^11.9.0",
     "jsonwebtoken": "^9.0.2",
     "next": "14.1.4",
-    "next-auth": "^5.0.0-beta.16",
+    "next-auth": "^5.0.0-beta.19",
     "prop-types": "^15.8.1",
     "quill": "^2.0.0",
     "react": "^18",

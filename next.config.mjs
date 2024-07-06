@@ -5,6 +5,7 @@ https://medium.com/@rohitkumarkhatri/next-auth-in-app-router-of-next-js-7df037f7
 
 const nextConfig = {
   reactStrictMode: false,
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
