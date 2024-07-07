@@ -1,6 +1,6 @@
 export async function getRefreshToken(email: string): Promise<Response> {
-  console.log(`${process.env.NEXT_PUBLIC_API_URL}/auth/token/request`)
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/token/request`, {
+  console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/user/create`)
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

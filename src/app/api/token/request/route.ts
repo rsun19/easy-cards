@@ -5,9 +5,11 @@ import { auth } from "../../../../auth";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await auth();
+  console.log(session);
   if (session?.user?.email != null) {
     try {
       const response = await getRefreshToken(session?.user?.email);
+      console.log(response)
       if (response.ok) {
         const textResponse = await response.text();
         cookies().set({
@@ -19,15 +21,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         });
         return NextResponse.redirect(new URL("/", request.url));
       } else {
-        return NextResponse.redirect(
-          new URL("/token/request/failure", request.url),
-        );
+        console.log(response)
+        // return NextResponse.redirect(
+        //   new URL("/token/request/failure", request.url),
+        // );
       }
     } catch (e) {
-      return NextResponse.redirect(
-        new URL("/token/request/failure", request.url),
-      );
+      console.log(e)
+      // return NextResponse.redirect(
+      //   new URL("/token/request/failure", request.url),
+      // );
     }
   }
+  // return NextResponse.redirect(new URL("/", request.url));
   return NextResponse.redirect(new URL("/login/failure", request.url));
 }
