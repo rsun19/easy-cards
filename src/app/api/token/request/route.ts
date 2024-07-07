@@ -1,14 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getRefreshToken } from "../../../lib/getRefreshToken";
 import { cookies } from "next/headers";
 import { auth } from "../../../../auth";
+import { createUser } from "@/app/lib/createUser";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await auth();
   console.log(session);
   if (session?.user?.email != null) {
     try {
-      const response = await getRefreshToken(session?.user?.email);
+      const response = await createUser(session?.user?.email);
       console.log(response)
       if (response.ok) {
         const textResponse = await response.text();

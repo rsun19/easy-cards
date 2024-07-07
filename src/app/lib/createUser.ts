@@ -1,4 +1,4 @@
-export async function getRefreshToken(email: string): Promise<Response> {
+export async function createUser(email: string): Promise<Response> {
   console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/user/create`)
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/create`, {
     method: "POST",
