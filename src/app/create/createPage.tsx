@@ -55,6 +55,40 @@ const Create: React.FC<CreateProps> = ({
     });
   }
 
+  const onSubmit = async (): Promise<void> => {
+    const Quill = (await import("quill")).default;
+    const setName = document.getElementById(
+      "setName",
+    ) as HTMLInputElement;
+    const cardMapping: CardMapping[] = [];
+    cards.forEach((card) => {
+      const id = card.props.id;
+      const questionDiv = document.getElementById(`question-${id}`);
+      const answerDiv = document.getElementById(`answer-${id}`);
+      if (
+        questionDiv !== null &&
+        answerDiv !== null &&
+        typeof questionDiv !== "undefined" &&
+        typeof answerDiv !== "undefined"
+      ) {
+        const questionQuill = Quill.find(questionDiv);
+        const answerQuill = Quill.find(answerDiv);
+        if (
+          validateQuillContents(questionQuill) &&
+          validateQuillContents(answerQuill)
+        ) {
+          // 2nd index is flag to determine correct answer. Will update when features are stabilized.
+          cardMapping.push([
+            JSON.stringify(questionQuill.getContents().ops),
+            [JSON.stringify(answerQuill.getContents().ops)],
+            0,
+          ]);
+        }
+      }
+    });
+    await saveCards(setName.value, cardMapping);
+  }
+
   const saveCards = async (
     title: string,
     cards: CardMapping[],
@@ -122,39 +156,7 @@ const Create: React.FC<CreateProps> = ({
         <div className="my-3 text-center flex items-center justify-center">
           <div
             className="py-2 px-4 bg-cyan-500 rounded-xl cursor-pointer"
-            onClick={async () => {
-              const Quill = (await import("quill")).default;
-              const setName = document.getElementById(
-                "setName",
-              ) as HTMLInputElement;
-              const cardMapping: CardMapping[] = [];
-              cards.forEach((card) => {
-                const id = card.props.id;
-                const questionDiv = document.getElementById(`question-${id}`);
-                const answerDiv = document.getElementById(`answer-${id}`);
-                if (
-                  questionDiv !== null &&
-                  answerDiv !== null &&
-                  typeof questionDiv !== "undefined" &&
-                  typeof answerDiv !== "undefined"
-                ) {
-                  const questionQuill = Quill.find(questionDiv);
-                  const answerQuill = Quill.find(answerDiv);
-                  if (
-                    validateQuillContents(questionQuill) &&
-                    validateQuillContents(answerQuill)
-                  ) {
-                    // 2nd index is flag to determine correct answer. Will update when features are stabilized.
-                    cardMapping.push([
-                      JSON.stringify(questionQuill.getContents().ops),
-                      [JSON.stringify(answerQuill.getContents().ops)],
-                      0,
-                    ]);
-                  }
-                }
-              });
-              void saveCards(setName.value, cardMapping);
-            }}
+            onClick={onSubmit}
           >
             Submit
           </div>

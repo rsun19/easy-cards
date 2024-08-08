@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getAccessToken } from "./app/lib/getAccessToken";
 import { type RefreshTokenResponse } from "./types";
+import { getAccessTokenFromBackend } from "./app/lib/getAccessTokenFromBackend";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         */
         const responseUrl = NextResponse.redirect(request.url);
         try {
-          const response: Response = await getAccessToken(
+          const response: Response = await getAccessTokenFromBackend(
             sessionMap.refreshToken,
           );
           const responseText = await response.text();

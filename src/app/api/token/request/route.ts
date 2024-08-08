@@ -5,11 +5,10 @@ import { createUser } from "@/app/lib/createUser";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await auth();
-  console.log(session);
   if (session?.user?.email != null) {
     try {
       const response = await createUser(session?.user?.email);
-      console.log(response)
+      console.log(response);
       if (response.ok) {
         const textResponse = await response.text();
         cookies().set({
@@ -19,15 +18,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           maxAge: 60 * 60 * 24 * 7 * 4, // One month
           path: "/",
         });
-        return NextResponse.redirect(new URL("/", request.url));
+        // return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect("http://localhost:3000");
       } else {
-        console.log(response)
         // return NextResponse.redirect(
         //   new URL("/token/request/failure", request.url),
         // );
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
       // return NextResponse.redirect(
       //   new URL("/token/request/failure", request.url),
       // );

@@ -18,6 +18,8 @@ const nextConfig = {
     GOOGLE_CLIENT_ID: `${process.env.CLIENT_ID}`,
     GOOGLE_CLIENT_SECRET: `${process.env.CLIENT_SECRET}`,
     NEXTAUTH_SECRET: `${process.env.NEXTAUTH_SECRET}`,
+    NEXT_PUBLIC_API_URL: "http://backend:9000",
+    NEXT_PUBLIC_CLIENT_TO_API_URL: "http://localhost:9000"
   },
 };
 
