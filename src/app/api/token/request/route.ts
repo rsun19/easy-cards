@@ -18,8 +18,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           maxAge: 60 * 60 * 24 * 7 * 4, // One month
           path: "/",
         });
-        // return NextResponse.redirect(new URL("/", request.url));
-        return NextResponse.redirect("http://localhost:3000");
+        return NextResponse.redirect(new URL("/", request.url));
+        // return NextResponse.redirect("http://localhost:3000");
       } else {
         // return NextResponse.redirect(
         //   new URL("/token/request/failure", request.url),

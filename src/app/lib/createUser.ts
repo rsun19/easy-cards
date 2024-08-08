@@ -9,6 +9,5 @@ export async function createUser(email: string): Promise<Response> {
       email,
     }),
   });
-  console.log(response)
   return response;
 }
