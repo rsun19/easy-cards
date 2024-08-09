@@ -94,9 +94,11 @@ const SubNavbar: React.FC<SubNavbarProps> = ({
     <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <Link href={"/"} className={classes.link}>
-            Easy Cards
-          </Link>
+          <div className="max-w-80">
+            <Link href={"/"} className={classes.link}>
+              Easy Cards
+            </Link>
+          </div>
           <Group h="100%" gap={0} visibleFrom="sm">
             <a href="/" className={classes.link}>
               Home
@@ -198,9 +200,9 @@ const SubNavbar: React.FC<SubNavbarProps> = ({
         <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
           <Divider my="sm" />
 
-          <a href="/search" className={classes.link}>
+          {/* <a href="/search" className={classes.link}>
             Search
-          </a>
+          </a> */}
           <UnstyledButton className={classes.link} onClick={toggleLinks}>
             <Center inline>
               <Box component="span" mr={5}>

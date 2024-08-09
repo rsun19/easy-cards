@@ -19,7 +19,7 @@ const SetCard: React.FC<SetProps> = ({
   deleteSet,
 }): React.JSX.Element => {
   return (
-    <div className="max-w rounded-lg overflow-hidden border mx-5 mb-5">
+    <div className="max-w rounded-lg overflow-x-auto border mx-5 mb-5">
       <div className="flex flex-row">
         <Link
           href={{

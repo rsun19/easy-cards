@@ -81,7 +81,7 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
       <div className="m-5" style={{ height: "75vh" }}>
         {flashcardList[flashcardIdx]}
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-5">
         <div
           style={{ backgroundColor: "darkseagreen", color: "white" }}
           className="basis-11/12 mx-5 max-w-full rounded-xl overflow-hidden shadow-lg text-xl"

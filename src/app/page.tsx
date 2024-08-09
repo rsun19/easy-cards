@@ -8,7 +8,7 @@ export default async function Home(): Promise<React.JSX.Element> {
     <div className="h-lvh bg-teal-400">
       <Navbar />
       <div
-        className="bg-teal-400 flex flex-col gap-10 justify-center items-center text-white"
+        className="bg-teal-400 flex flex-col gap-10 justify-center items-center text-white text-center"
         style={{ height: "95vh" }}
       >
         <div className="text-4xl">Welcome to Easy Cards</div>
