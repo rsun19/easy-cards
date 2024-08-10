@@ -19,19 +19,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           path: "/",
         });
         return NextResponse.redirect(new URL("/", request.url));
-        // return NextResponse.redirect("http://localhost:3000");
       } else {
-        // return NextResponse.redirect(
-        //   new URL("/token/request/failure", request.url),
-        // );
+        return NextResponse.redirect(
+          new URL("/token/request/failure", request.url),
+        );
       }
     } catch (e) {
       console.log(e);
-      // return NextResponse.redirect(
-      //   new URL("/token/request/failure", request.url),
-      // );
+      return NextResponse.redirect(
+        new URL("/token/request/failure", request.url),
+      );
     }
   }
-  // return NextResponse.redirect(new URL("/", request.url));
   return NextResponse.redirect(new URL("/login/failure", request.url));
 }
