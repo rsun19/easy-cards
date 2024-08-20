@@ -16,10 +16,10 @@ const nextConfig = {
   },
   env: {
     // change between production and 
-    NEXT_PUBLIC_API_URL: "http://localhost:9000",
+    // NEXT_PUBLIC_API_URL: "http://localhost:9000",
+    // NEXT_PUBLIC_CLIENT_TO_API_URL: "http://localhost:9000",
+    NEXT_PUBLIC_API_URL: "http://backend:9000",
     NEXT_PUBLIC_CLIENT_TO_API_URL: "http://localhost:9000"
-    // NEXT_PUBLIC_API_URL: "/serverAPI",
-    // NEXT_PUBLIC_CLIENT_TO_API_URL: "/clientAPI"
   },
 };
 
