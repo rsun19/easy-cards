@@ -26,7 +26,6 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
     cookieData.refreshToken,
     params.slug,
   );
-
   return (
     <>
       <Navbar />
@@ -40,14 +39,22 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
         >
           Study flashcards
         </Button>
-        <Button
+        {(!(flashcards?.visit ?? true)) && <Button
           component={Link}
           href={`/sets/${flashcards?.set?.id}/edit`}
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
         >
           Edit flashcards
-        </Button>
+        </Button>}
+        {(!(flashcards?.visit ?? true)) && <Button
+          component={Link}
+          href={`/sets/${flashcards?.set?.id}/view/users`}
+          variant="gradient"
+          gradient={{ from: "blue", to: "cyan", deg: 90 }}
+        >
+          Edit viewer access
+        </Button>}
       </div>
       {flashcards?.flashcards.map((flashcard, index) => {
         return (
