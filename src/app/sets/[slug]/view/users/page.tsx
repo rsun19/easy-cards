@@ -1,10 +1,10 @@
 "use server";
 import React from "react";
-import Navbar from "../../../components/navbar";
 import { cookies } from "next/headers";
-import { getFlashcards } from "@/app/lib/getFlashcards";
 import { type RefreshTokenResponse } from "@/types";
-import EditCardList from "./EditCardList";
+import Navbar from "@/app/components/navbar";
+import ViewList from "./viewList";
+import { getSetViewList } from "@/app/lib/getSetViewList";
 
 interface PageParams {
   params: {
@@ -19,28 +19,29 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
   }
   const cookieData: RefreshTokenResponse = JSON.parse(cookie.value);
 
-  const flashcards = await getFlashcards(
-    cookieData.accessToken,
-    cookieData.refreshToken,
-    params.slug,
-  );
+  let userList: string[] = [];
 
-  if (flashcards === null || flashcards.visit) {
-    return <p>Access denied.</p>
+  const response = await getSetViewList(cookieData.accessToken, params.slug);
+  if (!response.ok) {
+    return (
+      <div>Access denied</div>
+    );
+    } else {
+      const userListResponses = await response.text();
+      userList = JSON.parse(userListResponses);
   }
 
   return (
     <>
       <Navbar />
       <div className="mt-3 text-center text-2xl flex flex-col justify-center items-center gap-3">
-        {flashcards?.set?.name}
+        Add or remove users who have access to your set.
       </div>
-      <EditCardList
+      <ViewList
         accessToken={cookieData.accessToken}
         refreshToken={cookieData.refreshToken}
-        set={flashcards?.set ?? null}
-        flashcards={flashcards?.flashcards ?? []}
-        visit={false}
+        setId={params.slug}
+        startingUserList={userList}
       />
     </>
   );

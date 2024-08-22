@@ -11,6 +11,7 @@ import { getFlashcardsFromAPI } from "./getFlashcardsFromAPI";
 export interface GetFlashcardsType {
   set: UserSetCards | null;
   flashcards: SetCardProps[];
+  visit: boolean;
 }
 
 export const getFlashcards = async (
@@ -19,6 +20,7 @@ export const getFlashcards = async (
   id: string,
 ): Promise<GetFlashcardsType | null> => {
   let userSetData = await getFlashcardsFromAPI(accessToken, id);
+  console.log(userSetData);
   if (userSetData === null) {
     try {
       const response = await getAccessToken(refreshToken);
@@ -69,11 +71,12 @@ export const getFlashcards = async (
         answers,
       });
     }
+    const visit = responseData.visit;
     const set: UserSetCards = {
       id: responseData.set.id,
-      name: responseData.set.name,
+      name: responseData.set.name
     };
-    return { set, flashcards };
+    return { set, flashcards, visit };
   }
   return null;
 };
