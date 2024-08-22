@@ -20,7 +20,6 @@ export const getFlashcards = async (
   id: string,
 ): Promise<GetFlashcardsType | null> => {
   let userSetData = await getFlashcardsFromAPI(accessToken, id);
-  console.log(userSetData);
   if (userSetData === null) {
     try {
       const response = await getAccessToken(refreshToken);

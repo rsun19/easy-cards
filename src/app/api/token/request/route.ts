@@ -8,7 +8,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (session?.user?.email != null) {
     try {
       const response = await createUser(session?.user?.email);
-      console.log(response);
       if (response.ok) {
         const textResponse = await response.text();
         cookies().set({
