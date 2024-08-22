@@ -7,6 +7,8 @@ import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
 import { type Op } from "quill/core";
 import "./styles.css";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 interface SetCardProps {
   question: QuestionType;
@@ -18,6 +20,7 @@ const SetCard: React.FC<SetCardProps> = ({
   answers,
 }): React.JSX.Element => {
   useEffect(() => {
+    window.katex = katex;
     const loadQuill = async (): Promise<void> => {
       const Quill = (await import("quill")).default;
       const quillQuestion = new Quill(`#question-${question.id}`, {

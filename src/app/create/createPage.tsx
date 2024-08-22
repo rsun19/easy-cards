@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/card";
 import { insertSet } from "../lib/insertSet";
 import { getAccessToken } from "../lib/getAccessToken";
@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { type AccessTokenResponse } from "@/types";
 import "quill/dist/quill.snow.css";
 import { validateQuillContents } from "../lib/utils";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 type CardMapping = [string, [string], number];
 
@@ -25,6 +27,10 @@ const Create: React.FC<CreateProps> = ({
     <Card key="0" id="0" removeCard={removeCard} />,
   ]);
   const router = useRouter();
+  
+  useEffect(() => {
+    window.katex = katex;
+  }, [])
 
   function addCards(): void {
     if (cardNum < 700) {

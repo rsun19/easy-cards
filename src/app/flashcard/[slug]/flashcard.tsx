@@ -6,6 +6,8 @@ import { type SetCardProps } from "@/types";
 import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
 import { type Op } from "quill/core";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 const Flashcard: React.FC<SetCardProps> = ({
   question,
@@ -23,6 +25,10 @@ const Flashcard: React.FC<SetCardProps> = ({
       flashcardContent.classList.toggle("flashcard-content-flip");
     }
   };
+
+  useEffect(() => {
+    window.katex = katex;
+  }, []);
 
   useEffect(() => {
     const loadQuill = async (): Promise<void> => {

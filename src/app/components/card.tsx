@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { FiTrash } from "react-icons/fi";
 import React, { useEffect } from "react";
@@ -5,6 +7,8 @@ import hljs from "highlight.js";
 import "./styles.css";
 import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 interface CardProps {
   id: string;
@@ -34,6 +38,7 @@ const formats = [
 
 const Card: React.FC<CardProps> = ({ id, removeCard }) => {
   useEffect(() => {
+    window.katex = katex;
     const loadQuill = async (): Promise<void> => {
       const Quill = (await import("quill")).default;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,7 +54,7 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
               { list: "ordered" },
               { list: "bullet" },
             ],
-            ["blockquote", "code-block"],
+            ["blockquote", "code-block", "formula"],
           ],
         },
         placeholder: "Compose an epic...",
@@ -69,7 +74,7 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
               { list: "ordered" },
               { list: "bullet" },
             ],
-            ["blockquote", "code-block"],
+            ["blockquote", "code-block", "formula"],
           ],
         },
         placeholder: "Compose an epic...",

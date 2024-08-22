@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { FiTrash } from "react-icons/fi";
 import React, { useEffect } from "react";
@@ -7,6 +9,8 @@ import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
 import { type QuestionType, type AnswerType } from "@/types";
 import { type Op } from "quill/core";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 interface CardProps {
   id: string;
@@ -43,6 +47,7 @@ const EditCard: React.FC<CardProps> = ({
   removeCard,
 }) => {
   useEffect(() => {
+    window.katex = katex;
     const loadQuill = async (): Promise<void> => {
       const Quill = (await import("quill")).default;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -11,6 +11,8 @@ import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
 import EditCard from "./EditCard";
 import { editSet } from "@/app/lib/editSet";
 import { deleteCard } from "@/app/lib/deleteCard";
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 interface CardMapping {
   questionId?: number
@@ -51,6 +53,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
   const oldSetName = set?.name
 
   useEffect(() => {
+    window.katex = katex;
     const flashcardsList: React.JSX.Element[] = [];
     flashcards.forEach((flashcard) => {
       const newCardNum = cardNum;
