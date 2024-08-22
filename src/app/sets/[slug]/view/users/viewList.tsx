@@ -3,25 +3,89 @@
 import React, { useState } from 'react';
 import { Center, Table } from '@mantine/core';
 import { FiTrash } from "react-icons/fi";
+import { type AccessTokenResponse } from '@/types';
+import { addUserToViewList } from '@/app/lib/addUserToViewList';
+import { getAccessToken } from '@/app/lib/getAccessToken';
+import { removeUserFromViewList } from '@/app/lib/removeUserFromViewList';
 
 interface ViewListProps {
     accessToken: string;
     refreshToken: string;
     setId: string;
+    startingUserList: string[]
 }
 
-const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken }) => {
-    const [userList, setUserList] = useState<string[]>(["robertssun1234@gmail.com", "dum2zm@virginia.edu"]);
+const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken, setId, startingUserList }) => {
+    const [userList, setUserList] = useState<string[]>(startingUserList);
     const [input, setInput] = useState('');
     const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/;
 
-    const addUser = (email: string): void => {
-        setUserList([...userList, email]);
+    const addUser = async (email: string): Promise<void> => {
+        try {
+            const response = await addUserToViewList(accessToken, email, setId);
+            if (response.status === 404) {
+                alert('User is already in list.');
+            }
+            else if (!response.ok) {
+              const refreshResponse = await getAccessToken(refreshToken);
+              if (refreshResponse.ok) {
+                const textResponse = await refreshResponse.text();
+                const textResponseJSON: AccessTokenResponse =
+                  JSON.parse(textResponse);
+                const secondTry = await addUserToViewList(
+                  textResponseJSON.accessToken,
+                  email,
+                  setId
+                );
+                if (response.status === 404) {
+                    alert('User is already in list.');
+                }
+                else if (!secondTry.ok) {
+                  alert("Failed to add user.");
+                } else {
+                    setUserList([...userList, email]);
+                }
+              } else {
+                alert("Failed to add user.");
+              }
+            } else {
+                setUserList([...userList, email]);
+            }
+        } catch (e) {
+            alert("Failed to add user.");
+        }
     }
 
-    const removeUsers = (email: string): void => {
-        const removeUser = userList.filter((item) => item !== email);
-        setUserList(removeUser);
+    const removeUsers = async (email: string): Promise<void> => {
+        try {
+            const response = await removeUserFromViewList(accessToken, email, setId);
+            if (!response.ok) {
+              const refreshResponse = await getAccessToken(refreshToken);
+              if (refreshResponse.ok) {
+                const textResponse = await refreshResponse.text();
+                const textResponseJSON: AccessTokenResponse =
+                  JSON.parse(textResponse);
+                const secondTry = await removeUserFromViewList(
+                  textResponseJSON.accessToken,
+                  email,
+                  setId
+                );
+                if (!secondTry.ok) {
+                  alert("Failed to add user.");
+                } else {
+                    const removeUser = userList.filter((item) => item !== email);
+                    setUserList(removeUser);
+                }
+              } else {
+                alert("Failed to add user.");
+              }
+            } else {
+                const removeUser = userList.filter((item) => item !== email);
+                setUserList(removeUser);
+            }
+        } catch (e) {
+            alert("Failed to add user.");
+        }
     }
 
     const rows = userList.map((element: string) => (
@@ -31,8 +95,9 @@ const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken }) => {
                 <FiTrash
                     size={30}
                     className="cursor-pointer"
-                    onClick={() => {
-                        removeUsers(element);
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={async () => {
+                        await removeUsers(element);
                     }}
                 />
             </Table.Td>
@@ -68,11 +133,12 @@ const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken }) => {
                     <div className="absolute inset-y-0 right-0 flex items-center">
                         <button
                             className="text-center h-full rounded-md border-0 bg-teal-500 px-5 text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                            onClick={() => { 
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                            onClick={async () => { 
                                 if (!regex.test(input)) {
                                     alert('invalid email address');
                                 } else {
-                                    addUser(input);
+                                    await addUser(input);
                                     setInput('');
                                 }
                             }}

@@ -26,6 +26,11 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
     cookieData.refreshToken,
     params.slug,
   );
+
+  if (flashcards === null) {
+    return <p>Access denied.</p>
+  }
+
   return (
     <>
       <Navbar />

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { type RefreshTokenResponse } from "@/types";
 import Navbar from "@/app/components/navbar";
 import ViewList from "./viewList";
+import { getSetViewList } from "@/app/lib/getSetViewList";
 
 interface PageParams {
   params: {
@@ -18,6 +19,18 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
   }
   const cookieData: RefreshTokenResponse = JSON.parse(cookie.value);
 
+  let userList: string[] = [];
+
+  const response = await getSetViewList(cookieData.accessToken, params.slug);
+  if (!response.ok) {
+    return (
+      <div>Access denied</div>
+    );
+    } else {
+      const userListResponses = await response.text();
+      userList = JSON.parse(userListResponses);
+  }
+
   return (
     <>
       <Navbar />
@@ -28,6 +41,7 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
         accessToken={cookieData.accessToken}
         refreshToken={cookieData.refreshToken}
         setId={params.slug}
+        startingUserList={userList}
       />
     </>
   );

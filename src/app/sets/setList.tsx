@@ -34,12 +34,15 @@ const SetList: React.FC<SetListProps> = ({
           );
           if (!secondTry.ok) {
             alert("Set failed to delete.");
+          } else {
+            setSetsList(setsList.filter((set) => set.id !== id));
           }
         } else {
           alert("Set failed to delete.");
         }
+      } else {
+        setSetsList(setsList.filter((set) => set.id !== id));
       }
-      setSetsList(setsList.filter((set) => set.id !== id));
     } catch (e) {
       alert("Set failed to delete.");
     }

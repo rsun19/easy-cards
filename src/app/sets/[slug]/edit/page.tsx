@@ -25,11 +25,15 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
     params.slug,
   );
 
+  if (flashcards === null || flashcards.visit) {
+    return <p>Access denied.</p>
+  }
+
   return (
     <>
       <Navbar />
       <div className="mt-3 text-center text-2xl flex flex-col justify-center items-center gap-3">
-        {flashcards?.set !== null && flashcards?.set.name}
+        {flashcards?.set?.name}
       </div>
       <EditCardList
         accessToken={cookieData.accessToken}

@@ -24,12 +24,17 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
       params.slug,
     );
 
+    if (flashcards === null) {
+      return <p>Access denied.</p>
+    }
+
     return (
       <>
         <Navbar />
         <FlashcardPage
           set={flashcards?.set ?? null}
           flashcards={flashcards?.flashcards ?? []}
+          visit={false}
         />
       </>
     );
