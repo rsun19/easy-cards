@@ -44,7 +44,6 @@ const EditCardList: React.FC<EditCardListProps> = ({
   set,
   flashcards,
 }): React.JSX.Element => {
-  const [cardNum, setCardNum] = useState(0);
   const [highestID, setHighestID] = useState(0);
   const [cards, setCards] = useState<React.JSX.Element[]>([]);
   const oldVersionMap = new Map<number, SetCardProps>();
@@ -55,12 +54,11 @@ const EditCardList: React.FC<EditCardListProps> = ({
   useEffect(() => {
     window.katex = katex;
     const flashcardsList: React.JSX.Element[] = [];
+    let highestIdNum = 0;
     flashcards.forEach((flashcard) => {
-      const newCardNum = cardNum;
-      setCardNum(cardNum + 1);
       flashcardsList.push(
         <EditCard
-          key={(newCardNum + 1).toString()}
+          key={flashcard.question.id.toString()}
           id={flashcard.question.id.toString()}
           question={flashcard.question}
           answers={flashcard.answers}
@@ -68,10 +66,10 @@ const EditCardList: React.FC<EditCardListProps> = ({
         />,
       );
       oldVersionMap.set(flashcard.question.id, flashcard);
-      setHighestID(Math.max(highestID, newCardNum + 1));
+      highestIdNum = Math.max(highestID, flashcard.question.id);
     });
     setCards(flashcardsList);
-    setCardNum(highestID);
+    setHighestID(highestIdNum)
     setOldVersionMapState(oldVersionMap);
     if (set) {
       (document.getElementById('setName') as HTMLInputElement).value = set.name
@@ -79,14 +77,14 @@ const EditCardList: React.FC<EditCardListProps> = ({
   }, []);
 
   function addCards(): void {
-    if (cardNum < 700) {
-      const newCardNum = cardNum;
-      setCardNum(cardNum + 1);
+    if (cards.length < 700) {
+      const newHighestID = highestID;
+      setHighestID(newHighestID + 1);
       setCards([
         ...cards,
         <EditCard
-          key={(newCardNum + 1).toString()}
-          id={(newCardNum + 1).toString()}
+          key={(newHighestID + 1).toString()}
+          id={(newHighestID + 1).toString()}
           removeCard={removeCard}
           question={null}
           answers={[]}
