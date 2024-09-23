@@ -29,9 +29,7 @@ const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken, setId, s
             else if (!response.ok) {
               const refreshResponse = await getAccessToken(refreshToken);
               if (refreshResponse.ok) {
-                const textResponse = await refreshResponse.text();
-                const textResponseJSON: AccessTokenResponse =
-                  JSON.parse(textResponse);
+                const textResponseJSON: AccessTokenResponse = await refreshResponse.json();
                 const secondTry = await addUserToViewList(
                   textResponseJSON.accessToken,
                   email,
@@ -62,9 +60,7 @@ const ViewList: React.FC<ViewListProps> = ({ accessToken, refreshToken, setId, s
             if (!response.ok) {
               const refreshResponse = await getAccessToken(refreshToken);
               if (refreshResponse.ok) {
-                const textResponse = await refreshResponse.text();
-                const textResponseJSON: AccessTokenResponse =
-                  JSON.parse(textResponse);
+                const textResponseJSON: AccessTokenResponse = await refreshResponse.json();
                 const secondTry = await removeUserFromViewList(
                   textResponseJSON.accessToken,
                   email,

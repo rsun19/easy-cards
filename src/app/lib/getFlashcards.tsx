@@ -24,8 +24,7 @@ export const getFlashcards = async (
     try {
       const response = await getAccessToken(refreshToken);
       if (response.ok) {
-        const textResponse = await response.text();
-        const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse);
+        const textResponseJSON: AccessTokenResponse = await response.json();
         userSetData = await getFlashcardsFromAPI(
           textResponseJSON.accessToken,
           id,

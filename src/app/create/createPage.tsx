@@ -106,19 +106,23 @@ const Create: React.FC<CreateProps> = ({
     const response = await insertSet(accessToken, JSON.stringify(setMap));
     if (response.ok) {
       router.push("/");
+    } else if (response.status === 403) {
+      const responseText = await response.text();
+      alert(responseText);
     } else {
       try {
         const response = await getAccessToken(refreshToken);
         if (response.ok) {
-          const textResponse = await response.text();
-          const textResponseJSON: AccessTokenResponse =
-            JSON.parse(textResponse);
+          const textResponseJSON: AccessTokenResponse = await response.json();
           const secondTry = await insertSet(
             textResponseJSON.accessToken,
             JSON.stringify(setMap),
           );
           if (secondTry.ok) {
             router.push("/");
+          } else if (response.status === 403) {
+            const responseText = await response.text();
+            alert(responseText);
           } else {
             alert("Set failed to save");
           }

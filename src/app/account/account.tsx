@@ -43,9 +43,7 @@ const Account: React.FC<AccountProps> = ({
       if (statusCode === 401) {
         const response = await getAccessToken(refreshToken);
         if (response.ok) {
-          const textResponse = await response.text();
-          const textResponseJSON: AccessTokenResponse =
-            JSON.parse(textResponse);
+          const textResponseJSON: AccessTokenResponse = await response.json();
           // eslint-disable-next-line no-void
           const statusCodeRetry = await updateUsername(
             textResponseJSON.accessToken,

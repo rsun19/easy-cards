@@ -39,6 +39,11 @@ export interface SetType {
   name: string;
 }
 
+export interface SetListType {
+  username: string;
+  sets: SetType[];
+}
+
 export interface SetCardProps {
   question: QuestionType;
   answers: AnswerType[];

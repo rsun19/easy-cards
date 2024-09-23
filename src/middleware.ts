@@ -29,8 +29,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
           const response: Response = await getAccessTokenFromBackend(
             sessionMap.refreshToken,
           );
-          const responseText = await response.text();
-          const responseTextJson = JSON.parse(responseText);
+          const responseTextJson = await response.json();
           sessionMap.accessToken = responseTextJson.accessToken;
           sessionMap.accessTokenExpires = responseTextJson.accessTokenExpires;
           responseUrl.cookies.set("session", JSON.stringify(sessionMap), {

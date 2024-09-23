@@ -25,9 +25,7 @@ const SetList: React.FC<SetListProps> = ({
       if (!response.ok) {
         const refreshResponse = await getAccessToken(refreshToken);
         if (refreshResponse.ok) {
-          const textResponse = await refreshResponse.text();
-          const textResponseJSON: AccessTokenResponse =
-            JSON.parse(textResponse);
+          const textResponseJSON: AccessTokenResponse = await refreshResponse.json();
           const secondTry = await deleteSetAPI(
             textResponseJSON.accessToken,
             id,

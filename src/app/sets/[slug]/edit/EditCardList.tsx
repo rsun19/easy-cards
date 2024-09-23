@@ -100,9 +100,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
       try {
         const response = await deleteCard(accessToken, Number(id));
         if (!response.ok) {
-            const textResponse = await response.text();
-            const textResponseJSON: AccessTokenResponse =
-              JSON.parse(textResponse);
+            const textResponseJSON: AccessTokenResponse = await response.json();
             const secondTry = await deleteCard(textResponseJSON.accessToken, Number(id));
             if (!secondTry.ok) {
               alert("Question failed to delete");
@@ -129,16 +127,20 @@ const EditCardList: React.FC<EditCardListProps> = ({
     const response = await editSet(accessToken, setMap);
     if (response.ok) {
       router.push("/");
+    } else if (response.status === 403) {
+      const responseText = await response.text();
+      alert(responseText);
     } else {
       try {
         const response = await getAccessToken(refreshToken);
         if (response.ok) {
-          const textResponse = await response.text();
-          const textResponseJSON: AccessTokenResponse =
-            JSON.parse(textResponse);
+          const textResponseJSON: AccessTokenResponse = await response.json();
           const secondTry = await editSet(textResponseJSON.accessToken, setMap);
           if (secondTry.ok) {
             router.push("/");
+          } else if (response.status === 403) {
+            const responseText = await response.text();
+            alert(responseText);
           } else {
             alert("Set failed to save");
           }

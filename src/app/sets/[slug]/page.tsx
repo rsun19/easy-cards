@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 "use server";
 import React from "react";
 import Navbar from "../../components/navbar";
 import { cookies } from "next/headers";
 import { getFlashcards } from "@/app/lib/getFlashcards";
-import { type RefreshTokenResponse } from "@/types";
+import { type SetListType, type RefreshTokenResponse } from "@/types";
 import SetCard from "./setCards";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import Link from "next/link";
+import { getUserSets } from "@/app/lib/getUserSets";
+import CombineSetButton from "./combineSetButton";
 
 interface PageParams {
   params: {
@@ -27,6 +30,14 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
     params.slug,
   );
 
+  const sets = await getUserSets(cookieData.accessToken);
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  let setObj: SetListType = {} as SetListType;
+  if (sets) {
+    setObj = JSON.parse(sets);
+  }
+  const setList = setObj.sets.filter((x) => x.id !== Number(params.slug))
+
   if (flashcards === null) {
     return <p>Access denied.</p>
   }
@@ -36,13 +47,18 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
       <Navbar />
       <div className="mt-3 text-center text-2xl flex flex-col justify-center items-center gap-3">
         {flashcards?.set?.name}
+        <Flex
+          direction={{ base: 'column', sm: 'row' }}
+          gap={{ base: 'sm', sm: 'lg' }}
+          justify={{ sm: 'center' }}
+        >
         <Button
           component={Link}
           href={`/flashcard/${flashcards?.set?.id}`}
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
         >
-          Study flashcards
+          Study
         </Button>
         {(!(flashcards?.visit ?? true)) && <Button
           component={Link}
@@ -50,7 +66,7 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
         >
-          Edit flashcards
+          Edit
         </Button>}
         {(!(flashcards?.visit ?? true)) && <Button
           component={Link}
@@ -58,8 +74,10 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
           variant="gradient"
           gradient={{ from: "blue", to: "cyan", deg: 90 }}
         >
-          Edit viewer access
+          Change viewer access
         </Button>}
+        {setList && setList.length > 0 && <CombineSetButton accessToken={cookieData.accessToken} refreshToken={cookieData.refreshToken} sets={setList} /> }
+        </Flex>
       </div>
       {flashcards?.flashcards.map((flashcard, index) => {
         return (

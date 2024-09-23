@@ -12,8 +12,8 @@ export const getUsername = async (
     if (response.status !== 200) {
       return null;
     }
-    const responseText = await response.text();
-    return JSON.parse(responseText);
+    const responseText = await response.json();
+    return responseText;
   } catch (e) {
     return null;
   }

@@ -10,8 +10,7 @@ export const requestSet = async (
   if (userSetData === null) {
     const response = await getAccessToken(refreshToken);
     if (response.ok) {
-      const textResponse = await response.text();
-      const textResponseJSON: AccessTokenResponse = JSON.parse(textResponse);
+      const textResponseJSON: AccessTokenResponse = await response.json();
       userSetData = await getUserSets(textResponseJSON.accessToken);
       if (userSetData === null) {
         console.log("Failed to fetch sets");

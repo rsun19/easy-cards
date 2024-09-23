@@ -27,8 +27,7 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
       <div>Access denied</div>
     );
     } else {
-      const userListResponses = await response.text();
-      userList = JSON.parse(userListResponses);
+      userList = await response.json();
   }
 
   return (
