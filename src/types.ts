@@ -47,4 +47,5 @@ export interface SetListType {
 export interface SetCardProps {
   question: QuestionType;
   answers: AnswerType[];
+  flipped?: boolean;
 }

@@ -3,18 +3,19 @@ import React, { useEffect, useState } from "react";
 import Flashcard from "./flashcard";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { FaShuffle } from "react-icons/fa6";
-import { Divider, Text } from "@mantine/core";
+import { Button, Divider, Modal, Text } from "@mantine/core";
 import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
+import { useDisclosure } from '@mantine/hooks';
+import { IoSettingsOutline } from "react-icons/io5";
 
 const FlashcardPage: React.FC<GetFlashcardsType> = ({
   flashcards,
 }): React.JSX.Element => {
   const [flashcardIdx, setFlashcardIdx] = useState(0);
   const [flashcardList, setFlashcardList] = useState<React.JSX.Element[]>([]);
-  const [, updateState] = React.useState<undefined | Record<string, any>>();
-  const forceUpdate = React.useCallback(() => {
-    updateState({});
-  }, []);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [, updateState] = React.useState<undefined | Record<string, any>>()
+  const forceUpdate = React.useCallback(() => { updateState({}) }, []);
 
   const setCards = (): void => {
     const cards: React.JSX.Element[] = [];
@@ -24,21 +25,45 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
           key={i}
           question={flashcards[i].question}
           answers={flashcards[i].answers}
+          flipped={false}
         />,
       );
     }
     setFlashcardList(cards);
   };
 
+  const flipQuestionAnswer = (): void => {
+    setFlashcardList((cards) => {
+      const flipped: React.JSX.Element[] = [];
+      cards.forEach((card) => {
+        const props = card.props;
+        flipped.push(
+          <Flashcard 
+            question={props.question}
+            answers={props.answers}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            flipped={!props.flipped}
+          />
+        );
+      });
+      return flipped;
+    });
+    setFlashcardIdx(0);
+    close();
+  }
+
   const shuffleCards = (): void => {
-    const cards = flashcardList;
-    for (let i = cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = cards[i];
-      cards[i] = cards[j];
-      cards[j] = temp;
-    }
-    setFlashcardList(cards);
+    setFlashcardList((flashcardList) => {
+      const cards = flashcardList;
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = cards[i];
+        cards[i] = cards[j];
+        cards[j] = temp;
+      }
+      return cards;
+    });
+    setFlashcardIdx(0);
     forceUpdate();
   };
 
@@ -75,9 +100,22 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
 
   return (
     <>
-      <Text className="text-center mt-3">
-        Card: {flashcardIdx + 1}/{flashcardList.length}
-      </Text>
+      <div className="flex justify-between items-center mt-3 mx-5">
+        <div></div>
+        <Text className="text-center">
+          Card: {flashcardIdx + 1}/{flashcardList.length}
+        </Text>
+        <div>
+          <Modal opened={opened} onClose={close} title="Settings" centered>
+            <Button className="rounded-xl" onClick={() => {flipQuestionAnswer()}}>
+              Flip Question and Answer order
+            </Button>
+          </Modal>
+          <Button className="rounded-xl bg-black" onClick={open}>
+            <IoSettingsOutline />
+          </Button>
+        </div>
+      </div>
       <div className="m-5" style={{ height: "75vh" }}>
         {flashcardList[flashcardIdx]}
       </div>
