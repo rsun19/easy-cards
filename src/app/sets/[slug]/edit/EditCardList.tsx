@@ -78,24 +78,28 @@ const EditCardList: React.FC<EditCardListProps> = ({
 
   function addCards(): void {
     if (cards.length < 700) {
-      const newHighestID = highestID;
-      setHighestID(newHighestID + 1);
-      setCards([
-        ...cards,
-        <EditCard
-          key={(newHighestID + 1).toString()}
-          id={(newHighestID + 1).toString()}
-          removeCard={removeCard}
-          question={null}
-          answers={[]}
-        />,
-      ]);
+      setHighestID((id) => {
+        const newHighestID = id;
+        setHighestID(newHighestID + 1);
+        setCards([
+          ...cards,
+          <EditCard
+            key={(newHighestID + 1).toString()}
+            id={(newHighestID + 1).toString()}
+            removeCard={removeCard}
+            question={null}
+            answers={[]}
+          />,
+        ]);
+        return newHighestID + 1;
+      });
     } else {
       alert("A set has a maximum of 700 cards. Please create a new set.");
     }
   }
 
   async function removeCard(id: string): Promise<void> {
+    const Quill = (await import("quill")).default;
     if (oldVersionMapState.has(Number(id))) {
       try {
         const response = await deleteCard(accessToken, Number(id));
@@ -112,39 +116,51 @@ const EditCardList: React.FC<EditCardListProps> = ({
         router.push("/api/signout");
       }
     } 
-    // const newCardHolder = new Map();
-    // let newCardsList = [...cards];
-    console.log(cards);
     setCards((cards) => {
-      const newCardsList = [...cards];
+      const newCardsList = [];
       for (let i = 0; i < cards.length; i++) {
         if (cards[i].props.id === id) {
-          newCardsList.splice(i, 1);
-        // } else if (cards[i].props.question == null) {
-          // const question = document.getElementById(`question-${cards[i].props.id}`)?.innerHTML;
-          // const answer = document.getElementById(`answer-${cards[i].props.id}`)?.innerHTML;
-          // newCardHolder.set(Number(cards[i].props.id), { question, answer });
-          // console.log(newCardHolder);
+          continue;
+        } else if (cards[i].props.question == null) {
+          const questionDiv = document.getElementById(`question-${cards[i].props.id}`);
+          const answerDiv = document.getElementById(`answer-${cards[i].props.id}`);
+          if (
+            questionDiv !== null &&
+            answerDiv !== null &&
+            typeof questionDiv !== "undefined" &&
+            typeof answerDiv !== "undefined"
+          ) {
+            const questionQuill = Quill.find(questionDiv);
+            const answerQuill = Quill.find(answerDiv);
+            if (
+              validateQuillContents(questionQuill) &&
+              validateQuillContents(answerQuill)
+            ) {
+              // 2nd index is flag to determine correct answer. Will update when features are stabilized.
+              const questionContents = JSON.stringify(
+                questionQuill.getContents().ops,
+              );
+              const answerContents = JSON.stringify(
+                answerQuill.getContents().ops,
+              );
+              const props = cards[i].props;
+              newCardsList.push(
+                <EditCard 
+                  key={props.key}
+                  id={props.id}
+                  question={{id: props.id, question: questionContents}}
+                  answers={[{id: props.id, isCorrect: true, answer: answerContents}]}
+                  removeCard={removeCard}
+                />
+              );
+            }
+          }
+        } else {
+          newCardsList.push(cards[i]);
         }
       }
       return newCardsList;
     });
-    // console.log('hi???');
-    // console.log(newCardsList);
-    // for (let i = 0; i < newCardsList.length; i++) {
-    //   if (newCardsList[i].props.question === null) {
-    //     const question = document.getElementById(`question-${newCardsList[i].props.id}`);
-    //     const answer = document.getElementById(`answer-${newCardsList[i].props.id}`);
-    //     if (question && answer) {
-    //       question.innerHTML = newCardHolder.get(Number(newCardsList[i].props.id)).question;
-    //       answer.innerHTML = newCardHolder.get(Number(newCardsList[i].props.id)).answer;
-    //       console.log('!!!');
-    //       console.log(question.innerHTML);
-    //       console.log(answer.innerHTML);
-    //     }
-    //   }
-    // }
-    // console.log(newCardsList);
   }
 
   const saveCards = async (
