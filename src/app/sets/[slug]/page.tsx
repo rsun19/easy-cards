@@ -76,7 +76,7 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
         >
           Change viewer access
         </Button>}
-        {setList && setList.length > 0 && <CombineSetButton accessToken={cookieData.accessToken} refreshToken={cookieData.refreshToken} sets={setList} /> }
+        {setList && setList.length > 0 && <CombineSetButton accessToken={cookieData.accessToken} refreshToken={cookieData.refreshToken} sets={setList} setId={Number(params.slug)} /> }
         </Flex>
       </div>
       {flashcards?.flashcards.map((flashcard, index) => {

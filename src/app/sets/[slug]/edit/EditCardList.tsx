@@ -96,7 +96,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
   }
 
   async function removeCard(id: string): Promise<void> {
-    if (oldVersionMap.has(Number(id))) {
+    if (oldVersionMapState.has(Number(id))) {
       try {
         const response = await deleteCard(accessToken, Number(id));
         if (!response.ok) {
@@ -106,19 +106,45 @@ const EditCardList: React.FC<EditCardListProps> = ({
               alert("Question failed to delete");
             }
           }
+          oldVersionMap.delete(Number(id));
+          setOldVersionMapState(oldVersionMap);
         } catch (e) {
         router.push("/api/signout");
       }
     } 
+    // const newCardHolder = new Map();
+    // let newCardsList = [...cards];
+    console.log(cards);
     setCards((cards) => {
       const newCardsList = [...cards];
-      for (let i = 0; i < cards.length; ++i) {
+      for (let i = 0; i < cards.length; i++) {
         if (cards[i].props.id === id) {
           newCardsList.splice(i, 1);
+        // } else if (cards[i].props.question == null) {
+          // const question = document.getElementById(`question-${cards[i].props.id}`)?.innerHTML;
+          // const answer = document.getElementById(`answer-${cards[i].props.id}`)?.innerHTML;
+          // newCardHolder.set(Number(cards[i].props.id), { question, answer });
+          // console.log(newCardHolder);
         }
       }
       return newCardsList;
     });
+    // console.log('hi???');
+    // console.log(newCardsList);
+    // for (let i = 0; i < newCardsList.length; i++) {
+    //   if (newCardsList[i].props.question === null) {
+    //     const question = document.getElementById(`question-${newCardsList[i].props.id}`);
+    //     const answer = document.getElementById(`answer-${newCardsList[i].props.id}`);
+    //     if (question && answer) {
+    //       question.innerHTML = newCardHolder.get(Number(newCardsList[i].props.id)).question;
+    //       answer.innerHTML = newCardHolder.get(Number(newCardsList[i].props.id)).answer;
+    //       console.log('!!!');
+    //       console.log(question.innerHTML);
+    //       console.log(answer.innerHTML);
+    //     }
+    //   }
+    // }
+    // console.log(newCardsList);
   }
 
   const saveCards = async (
