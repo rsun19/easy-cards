@@ -8,11 +8,11 @@ import { type SetCardProps, type AccessTokenResponse } from "@/types";
 import "quill/dist/quill.snow.css";
 import { validateQuillContents } from "../../../lib/utils";
 import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
-import EditCard from "./EditCard";
 import { editSet } from "@/app/lib/editSet";
 import { deleteCard } from "@/app/lib/deleteCard";
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import Card from "@/app/components/card";
 
 interface CardMapping {
   questionId?: number
@@ -57,9 +57,9 @@ const EditCardList: React.FC<EditCardListProps> = ({
     let highestIdNum = 0;
     flashcards.forEach((flashcard) => {
       flashcardsList.push(
-        <EditCard
+        <Card
           key={flashcard.question.id.toString()}
-          id={flashcard.question.id.toString()}
+          id={flashcard.question.id}
           question={flashcard.question}
           answers={flashcard.answers}
           removeCard={removeCard}
@@ -83,9 +83,9 @@ const EditCardList: React.FC<EditCardListProps> = ({
         setHighestID(newHighestID + 1);
         setCards([
           ...cards,
-          <EditCard
+          <Card
             key={(newHighestID + 1).toString()}
-            id={(newHighestID + 1).toString()}
+            id={newHighestID + 1}
             removeCard={removeCard}
             question={null}
             answers={[]}
@@ -98,32 +98,32 @@ const EditCardList: React.FC<EditCardListProps> = ({
     }
   }
 
-  async function removeCard(id: string): Promise<void> {
+  async function removeCard(id: number): Promise<void> {
     const Quill = (await import("quill")).default;
-    if (oldVersionMapState.has(Number(id))) {
+    if (oldVersionMapState.has(id)) {
       try {
-        const response = await deleteCard(accessToken, Number(id));
+        const response = await deleteCard(accessToken, id);
         if (!response.ok) {
             const textResponseJSON: AccessTokenResponse = await response.json();
-            const secondTry = await deleteCard(textResponseJSON.accessToken, Number(id));
+            const secondTry = await deleteCard(textResponseJSON.accessToken, id);
             if (!secondTry.ok) {
               alert("Question failed to delete");
             }
           }
-          oldVersionMap.delete(Number(id));
+          oldVersionMap.delete(id);
           setOldVersionMapState(oldVersionMap);
         } catch (e) {
         router.push("/api/signout");
       }
     } 
     setCards((cards) => {
-      const newCardsList = [];
-      for (let i = 0; i < cards.length; i++) {
-        if (cards[i].props.id === id) {
-          continue;
-        } else if (cards[i].props.question == null) {
-          const questionDiv = document.getElementById(`question-${cards[i].props.id}`);
-          const answerDiv = document.getElementById(`answer-${cards[i].props.id}`);
+      const newCardsList: React.JSX.Element[] = [];
+      cards.forEach((card) => {
+        if (card.props.id === id) {
+          // do nothing
+        } else if (card.props.question == null) {
+          const questionDiv = document.getElementById(`question-${card.props.id}`);
+          const answerDiv = document.getElementById(`answer-${card.props.id}`);
           if (
             questionDiv !== null &&
             answerDiv !== null &&
@@ -143,22 +143,22 @@ const EditCardList: React.FC<EditCardListProps> = ({
               const answerContents = JSON.stringify(
                 answerQuill.getContents().ops,
               );
-              const props = cards[i].props;
+              const props = card.props;
               newCardsList.push(
-                <EditCard 
-                  key={props.key}
+                <Card 
+                  key={props.id.toString()}
                   id={props.id}
                   question={{id: props.id, question: questionContents}}
-                  answers={[{id: props.id, isCorrect: true, answer: answerContents}]}
+                  answers={[{id: props.id, isCorrect: false, answer: answerContents}]}
                   removeCard={removeCard}
                 />
               );
             }
           }
         } else {
-          newCardsList.push(cards[i]);
+          newCardsList.push(card);
         }
-      }
+      });
       return newCardsList;
     });
   }

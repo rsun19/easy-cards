@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 "use client";
 import React, { useEffect, useState } from "react";
@@ -23,8 +24,8 @@ const Create: React.FC<CreateProps> = ({
   refreshToken,
 }): React.JSX.Element => {
   const [cardNum, setCardNum] = useState(0);
-  const [cards, setCards] = useState([
-    <Card key="0" id="0" removeCard={removeCard} />,
+  const [cards, setCards] = useState<React.JSX.Element[]>([
+    <Card key="0" id={0} removeCard={removeCard} question={null} answers={[]} />
   ]);
   const router = useRouter();
   
@@ -40,8 +41,10 @@ const Create: React.FC<CreateProps> = ({
         ...cards,
         <Card
           key={(newCardNum + 1).toString()}
-          id={(newCardNum + 1).toString()}
+          id={newCardNum + 1}
           removeCard={removeCard}
+          question={null}
+          answers={[]}
         />,
       ]);
     } else {
@@ -49,14 +52,51 @@ const Create: React.FC<CreateProps> = ({
     }
   }
 
-  function removeCard(id: string): void {
+  async function removeCard(id: number): Promise<void> {
+    const Quill = (await import("quill")).default;
     setCards((cards) => {
-      const newCardsList = [...cards];
-      for (let i = 0; i < cards.length; ++i) {
-        if (cards[i].props.id === id) {
-          newCardsList.splice(i, 1);
+      const newCardsList: React.JSX.Element[] = [];
+      cards.forEach((card) => {
+        if (card.props.id === id) {
+          // do nothing
+        } else if (card.props.question == null) {
+          const questionDiv = document.getElementById(`question-${card.props.id}`);
+          const answerDiv = document.getElementById(`answer-${card.props.id}`);
+          if (
+            questionDiv !== null &&
+            answerDiv !== null &&
+            typeof questionDiv !== "undefined" &&
+            typeof answerDiv !== "undefined"
+          ) {
+            const questionQuill = Quill.find(questionDiv);
+            const answerQuill = Quill.find(answerDiv);
+            if (
+              validateQuillContents(questionQuill) &&
+              validateQuillContents(answerQuill)
+            ) {
+              // 2nd index is flag to determine correct answer. Will update when features are stabilized.
+              const questionContents = JSON.stringify(
+                questionQuill.getContents().ops,
+              );
+              const answerContents = JSON.stringify(
+                answerQuill.getContents().ops,
+              );
+              const props = card.props;
+              newCardsList.push(
+                <Card 
+                  key={props.id.toString()}
+                  id={props.id}
+                  question={{id: props.id, question: questionContents}}
+                  answers={[{id: props.id, isCorrect: false, answer: answerContents}]}
+                  removeCard={removeCard}
+                />
+              );
+            }
+          }
+        } else {
+          newCardsList.push(card);
         }
-      }
+      });
       return newCardsList;
     });
   }

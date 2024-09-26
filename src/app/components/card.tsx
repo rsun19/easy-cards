@@ -7,12 +7,16 @@ import hljs from "highlight.js";
 import "./styles.css";
 import "quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
+import { type QuestionType, type AnswerType } from "@/types";
+import { type Op } from "quill/core";
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
 interface CardProps {
-  id: string;
-  removeCard: (id: string) => void;
+  id: number;
+  question: QuestionType | null;
+  answers: AnswerType[];
+  removeCard: (id: number) => Promise<void>;
 }
 
 const formats = [
@@ -36,7 +40,12 @@ const formats = [
   "formula",
 ];
 
-const Card: React.FC<CardProps> = ({ id, removeCard }) => {
+const Card: React.FC<CardProps> = ({
+  id,
+  question,
+  answers,
+  removeCard,
+}) => {
   useEffect(() => {
     window.katex = katex;
     const loadQuill = async (): Promise<void> => {
@@ -61,6 +70,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
         theme: "snow",
         formats,
       });
+      if (question !== null) {
+        quillQuestion.setContents(JSON.parse(question.question) as Op[]);
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const quillAnswer = new Quill(`#answer-${id}`, {
         modules: {
@@ -81,6 +93,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
         theme: "snow",
         formats,
       });
+      if (answers.length > 0) {
+        quillAnswer.setContents(JSON.parse(answers[0].answer) as Op[]);
+      }
     };
     void loadQuill();
   }, []);
@@ -99,9 +114,9 @@ const Card: React.FC<CardProps> = ({ id, removeCard }) => {
       </div>
       <FiTrash
         size={30}
-        className="cursor-pointer"
-        onClick={() => {
-          removeCard(id);
+        className="cursor-pointer hover:text-red-600"
+        onClick={async () => {
+          await removeCard(id);
         }}
       />
     </div>
