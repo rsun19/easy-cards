@@ -15,6 +15,7 @@ import 'katex/dist/katex.min.css';
 import Card from "@/app/components/card";
 
 interface CardMapping {
+  id?: number
   questionId?: number
   answerId?: number
   question: string
@@ -257,6 +258,9 @@ const EditCardList: React.FC<EditCardListProps> = ({
                     const answerContents = JSON.stringify(
                       answerQuill.getContents().ops,
                     );
+                    console.log(questionQuill.getContents());
+                    console.log(answerQuill.getContents());
+                    
                     if (oldVersionMapState.has(Number(id))) {
                       const oldVersionMapValue = oldVersionMapState.get(Number(id))
                       if (
@@ -282,6 +286,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
                       }
                     } else {
                       cardMapping.push({
+                        id,
                         question: questionContents, 
                         answer: [answerContents], 
                         answerIndex: 0
@@ -296,7 +301,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
                   set,
                   editQuestion: editCardQuestion,
                   editAnswer: editCardAnswer,
-                  new: cardMapping,
+                  new: cardMapping.toSorted((a, b) => (a.id ?? 0) - (b.id ?? 0)),
                   setUpdate: oldSetName !== set.name
                 }
                 void saveCards(JSON.stringify(cardMappingCombination));
