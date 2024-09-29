@@ -258,9 +258,6 @@ const EditCardList: React.FC<EditCardListProps> = ({
                     const answerContents = JSON.stringify(
                       answerQuill.getContents().ops,
                     );
-                    console.log(questionQuill.getContents());
-                    console.log(answerQuill.getContents());
-                    
                     if (oldVersionMapState.has(Number(id))) {
                       const oldVersionMapValue = oldVersionMapState.get(Number(id))
                       if (
