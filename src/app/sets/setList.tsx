@@ -31,7 +31,7 @@ const SetList: React.FC<SetListProps> = ({
   const deleteSet = async (id: number | null): Promise<void> => {
     if (id === null) {
       alert("Set failed to delete.");
-      return
+      return;
     }
     try {
       const response = await deleteSetAPI(accessToken, id);
