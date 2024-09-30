@@ -9,7 +9,7 @@ export interface SetProps {
   id: number;
   name: string;
   author: string;
-  deleteSet: (id: number) => Promise<void>;
+  deleteSet: (id: number) => void;
 }
 
 const SetCard: React.FC<SetProps> = ({
@@ -36,7 +36,7 @@ const SetCard: React.FC<SetProps> = ({
         <div
           className="basis-2/12 flex flex-col items-center justify-center cursor-pointer hover:bg-red-600"
           onClick={() => {
-            void deleteSet(id);
+            deleteSet(id);
           }}
         >
           <FiTrash size={30} />
