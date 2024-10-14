@@ -53,6 +53,7 @@ export const getFlashcards = async (
       const question: QuestionType = {
         id: flashcardsArr[i].question.id,
         question: flashcardsArr[i].question.question,
+        star: flashcardsArr[i].question.star,
       };
       for (let j = 0; j < flashcardsArr[i].answers.length; j++) {
         const answer: AnswerType = {

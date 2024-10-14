@@ -81,11 +81,13 @@ const Page = async ({ params }: PageParams): Promise<React.JSX.Element> => {
       </div>
       {flashcards?.flashcards.map((flashcard, index) => {
         return (
-          <SetCard
-            key={index}
-            question={flashcard.question}
-            answers={flashcard.answers}
-          />
+          <div key={index} className="mt-3 border mx-3 rounded-xl">
+            <SetCard
+              question={flashcard.question}
+              answers={flashcard.answers}
+              accessToken={cookieData.accessToken}
+            />
+          </div>
         );
       })}
     </>

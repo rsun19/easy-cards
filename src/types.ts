@@ -24,6 +24,7 @@ export interface Flashcards {
 export interface QuestionType {
   id: number;
   question: string;
+  star?: boolean;
 }
 
 export interface AnswerType {

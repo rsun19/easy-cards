@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Flashcard from "./flashcard";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { FaShuffle } from "react-icons/fa6";
-import { Button, Divider, Modal, Text } from "@mantine/core";
+import { Button, Divider, Flex, Modal, Text } from "@mantine/core";
 import { type GetFlashcardsType } from "@/app/lib/getFlashcards";
 import { useDisclosure } from '@mantine/hooks';
 import { IoSettingsOutline } from "react-icons/io5";
@@ -16,6 +16,7 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
   const [opened, { open, close }] = useDisclosure(false);
   const [, updateState] = React.useState<undefined | Record<string, any>>()
   const forceUpdate = React.useCallback(() => { updateState({}) }, []);
+  const [star, setStar] = useState(false);
 
   const setCards = (): void => {
     const cards: React.JSX.Element[] = [];
@@ -48,6 +49,43 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
       });
       return flipped;
     });
+    setFlashcardIdx(0);
+    close();
+  }
+
+  const showStarredQuestions = (): void => {
+    const starred: React.JSX.Element[] = [];
+    flashcardList.forEach((card) => {
+      const props = card.props;
+        if (props.question.star === true) {
+          starred.push(card);
+        }
+    });
+    if (starred.length === 0) {
+      alert('You currently have no starred flashcards!');
+    } else {
+      setStar((star) => !star);
+      setFlashcardList(starred);
+      setFlashcardIdx(0);
+      close();
+    }
+  }
+
+  const hideStarredQuestions = (): void => {
+    setCards();
+    setStar((star) => !star);
+    setFlashcardIdx(0);
+    close();
+  }
+
+  const unshuffleFlashcards = (): void => {
+    setCards();
+    setFlashcardIdx(0);
+    close();
+  }
+
+  const reverseFlashcardDirection = (): void => {
+    setFlashcardList((cards) => cards.toReversed());
     setFlashcardIdx(0);
     close();
   }
@@ -106,10 +144,28 @@ const FlashcardPage: React.FC<GetFlashcardsType> = ({
           Card: {flashcardIdx + 1}/{flashcardList.length}
         </Text>
         <div>
-          <Modal opened={opened} onClose={close} title="Settings" centered>
-            <Button className="rounded-xl" onClick={() => {flipQuestionAnswer()}}>
-              Flip Question and Answer order
-            </Button>
+          <Modal size="auto" opened={opened} onClose={close} title="Settings" centered>
+            <Flex 
+              direction={{ base: 'column' }}
+              gap={{ base: 'sm' }}
+              justify={{ base: 'center' }}
+            >
+              <Button className="rounded-xl mb-2" onClick={() => {flipQuestionAnswer()}}>
+                Flip Question and Answer order
+              </Button>
+              {!star && <Button className="rounded-xl mb-2" onClick={() => {showStarredQuestions()}}>
+                Show starred flashcards
+              </Button>}
+              {star && <Button className="rounded-xl mb-2" onClick={() => {hideStarredQuestions()}}>
+                Hide starred flashcards
+              </Button>}
+              <Button className="rounded-xl mb-2" onClick={() => {unshuffleFlashcards()}}>
+                Unshuffle flashcards
+              </Button>
+              <Button className="rounded-xl mb-2" onClick={() => {reverseFlashcardDirection()}}>
+                Reverse flashcards direction
+              </Button>
+            </Flex>
           </Modal>
           <Button className="rounded-xl bg-black" onClick={open}>
             <IoSettingsOutline />
