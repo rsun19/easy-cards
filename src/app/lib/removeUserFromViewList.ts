@@ -3,8 +3,8 @@ export async function removeUserFromViewList(
     removedUserEmail: string,
     setId: string
   ): Promise<Response> {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_TO_API_URL}/api/set/view/users/remove`, {
-      method: "POST",
+    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_TO_API_URL}/api/set/view/users`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,

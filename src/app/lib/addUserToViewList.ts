@@ -3,7 +3,7 @@ export async function addUserToViewList(
     addedUserEmail: string,
     setId: string
   ): Promise<Response> {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_TO_API_URL}/api/set/view/users/add`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_TO_API_URL}/api/set/view/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

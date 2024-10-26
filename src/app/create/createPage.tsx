@@ -145,7 +145,7 @@ const Create: React.FC<CreateProps> = ({
     };
     const response = await insertSet(accessToken, JSON.stringify(setMap));
     if (response.ok) {
-      router.push("/");
+      router.push("/sets");
     } else if (response.status === 403) {
       const responseText = await response.text();
       alert(responseText);
@@ -159,7 +159,7 @@ const Create: React.FC<CreateProps> = ({
             JSON.stringify(setMap),
           );
           if (secondTry.ok) {
-            router.push("/");
+            router.push("/sets");
           } else if (response.status === 403) {
             const responseText = await response.text();
             alert(responseText);

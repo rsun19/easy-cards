@@ -169,7 +169,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
   ): Promise<void> => {
     const response = await editSet(accessToken, setMap);
     if (response.ok) {
-      router.push("/");
+      router.push(`/sets/${set?.id}`);
     } else if (response.status === 403) {
       const responseText = await response.text();
       alert(responseText);
@@ -180,7 +180,7 @@ const EditCardList: React.FC<EditCardListProps> = ({
           const textResponseJSON: AccessTokenResponse = await response.json();
           const secondTry = await editSet(textResponseJSON.accessToken, setMap);
           if (secondTry.ok) {
-            router.push("/");
+            router.push(`/sets/${set?.id}`);
           } else if (response.status === 403) {
             const responseText = await response.text();
             alert(responseText);

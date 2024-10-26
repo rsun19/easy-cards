@@ -94,7 +94,7 @@ const SubNavbar: React.FC<SubNavbarProps> = ({
     <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <div className="max-w-80">
+          <div className= "max-w-80 h-full flex flex-row justify-center items-center">
             <Link href={"/"} className={classes.link}>
               Easy Cards
             </Link>
